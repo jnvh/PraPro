@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Drawer } from 'antd';
 
 //Styles
-import './../../react-geo.css';
 import 'antd/dist/antd.css';
 import 'ol/ol.css';
 
@@ -23,8 +22,7 @@ export const TreeDrawer = (): JSX.Element => {
   const toggleDrawer = () => { setVisible(!visible); }
 
   return (
-    <div className="App">   
-   
+    <div className="App">  
       <SimpleButton
         style={{ position: 'fixed', top: '30px', right: '30px' }}
         onClick={toggleDrawer}
@@ -40,7 +38,8 @@ export const TreeDrawer = (): JSX.Element => {
       >
         <Tree
           map={map}
-          layerGroup={layerGroup} />
+          layerGroup={layerGroup} 
+        />
       </Drawer>
     </div>
   );

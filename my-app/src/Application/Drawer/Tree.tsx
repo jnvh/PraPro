@@ -6,7 +6,6 @@ import {
 import map, {getCurrentLayerName} from './IndikatorGroup'
 
 import 'antd/dist/antd.css';
-import './../../react-geo.css';
 
 export interface TreeProps{
     map: OlMap,

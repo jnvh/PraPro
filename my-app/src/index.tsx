@@ -4,13 +4,11 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import 'antd/dist/antd.css';
 import './react-geo.css';
-import {RiskMap} from './Client/RiskMap';
-
+import {Application} from './Application/RiskMap';
 
 ReactDOM.render(
-  <RiskMap/>,
+  <Application/>,
   document.getElementById('root')
 );
-
 
 reportWebVitals();
