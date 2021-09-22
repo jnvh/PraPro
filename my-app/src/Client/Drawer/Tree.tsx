@@ -1,11 +1,12 @@
 import OlMap from 'ol/Map';
 import OlLayerGroup from 'ol/layer/Group';
 import {
-  LayerTree
+  LayerTree, useMap
 } from '@terrestris/react-geo';
+import map, {getCurrentLayerName} from './IndikatorGroup'
 
 import 'antd/dist/antd.css';
-import './styles/react-geo.css';
+import './../../react-geo.css';
 
 export interface TreeProps{
     map: OlMap,
@@ -13,6 +14,13 @@ export interface TreeProps{
   };
 
 export const Tree = (props: TreeProps):JSX.Element =>{
+
+  const layerName = getCurrentLayerName(props.layerGroup);
+  map.setProperties({
+    currentLayername: layerName
+  });
+
+    console.log('TreeRender');
     return (
         <LayerTree
           map={props.map}

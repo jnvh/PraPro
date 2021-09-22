@@ -1,0 +1,10 @@
+{   
+    "Geoserver": "http://localhost:8080/geoserver/prapro/wms?",
+    "LayerNames":[
+        "Bevjekm2Skaliert", 
+        "builtup_boolean",
+        "Ue65Skaliert",
+        "Versigelungsgrad0bis100",
+        "HeatWaveSpellNorm"
+    ]
+}

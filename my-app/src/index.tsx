@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './styles/index.css';
+import './index.css';
 import reportWebVitals from './reportWebVitals';
 import 'antd/dist/antd.css';
-import './styles/react-geo.css';
-import  {TreeDrawer} from './typescript/TreeDrawer';
+import './react-geo.css';
+import {RiskMap} from './Client/RiskMap';
 
 
 ReactDOM.render(
-  <TreeDrawer />,
+  <RiskMap/>,
   document.getElementById('root')
 );
 
