@@ -1,0 +1,10 @@
+{
+    "indicators":[
+    ["Populationsdichte", "Hier steht ein informativer Text zu Populationsdichte"],
+    ["Anteil über 65", "Hier steht ein informativer Text zu Anteil über 65"],
+    ["Versiegelungsgrad", "Hier steht ein informativer Text zu Versiegelungsgrad"],
+    ["Hitzewellen", "Hier steht ein informativer Text zu Hitzewellen"],
+    ["Bebauung","Hier steht ein informativer Text zu Bebauung"]
+    ]
+  
+}

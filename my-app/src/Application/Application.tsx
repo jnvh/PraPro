@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
 import { TreeDrawer } from './Drawer/TreeDrawer';
-import { map } from './Drawer/IndikatorGroup';
-import { MapHeader } from './MapHeader';
-import { Footer } from './Footer';
-import './styles/RiskMap.css';
+import { MapHeader } from './Header/MapHeader';
+import { Footer } from './Footer/Footer';
+import './Application.css';
+import map from './Drawer/IndikatorGroup'
 //ReactGeo
 import {
     MapComponent,
     MapContext
 } from '@terrestris/react-geo';
 
+export function Application(): JSX.Element {
 
-export function RiskMap(): JSX.Element {
     return (
         <div className="App">
-             <MapContext.Provider value={map}>
+            <MapContext.Provider
+                value={map}>
                 <MapHeader />
                 <MapComponent
                     map={map}
@@ -26,4 +26,4 @@ export function RiskMap(): JSX.Element {
     );
 };
 
-export default RiskMap;
+export default Application;

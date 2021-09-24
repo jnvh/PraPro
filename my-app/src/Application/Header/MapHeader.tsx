@@ -1,4 +1,4 @@
-import './styles/header.css';
+import './header.css';
 
 export const MapHeader =():JSX.Element=>{
     return(

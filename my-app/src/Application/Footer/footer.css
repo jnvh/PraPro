@@ -1,4 +1,4 @@
-.header{
+.footer{
     background-color: #182f5e;    
     display: flex;
     flex-direction: column;
@@ -7,5 +7,9 @@
     justify-content: left;
     font-size: calc(10px + 2vmin);
     color: white;
-    height: 120px;
+    height: 95px;
+    position: fixed;
+    bottom: 0; 
+    width: 100%;  
 }
+

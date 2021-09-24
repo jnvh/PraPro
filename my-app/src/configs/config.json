@@ -1,10 +1,24 @@
 {   
+    "Basislayer": {
+        "url": "http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg",
+        "name": "Basislayer"
+    },
     "Geoserver": "http://localhost:8080/geoserver/prapro/wms?",
     "LayerNames":[
-        "Bevjekm2Skaliert", 
-        "builtup_boolean",
-        "Ue65Skaliert",
-        "Versigelungsgrad0bis100",
-        "HeatWaveSpellNorm"
-    ]
+        "Populationsdichte", 
+        "Bebauung",
+        "Anteil über 65",
+        "Versiegelungsgrad",
+        "Hitzewellen"
+    ],
+    "OverlayLayer": {
+        "url": "http://localhost:8080/geoserver/prapro/wms?",
+        "name": "OverlayLayer"
+    },
+    "InitialView":{
+        "center":[788453.4890155146, 6573085.729161344],
+        "zoom": 6,
+        "minZoom": 6,
+        "projection": "ESPG:3035"
+    }
 }
