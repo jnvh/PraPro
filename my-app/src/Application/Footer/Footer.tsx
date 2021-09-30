@@ -1,65 +1,94 @@
-import React from 'react';
 import './footer.css';
-
-import {getCurrentLayerName, 
-        getCurrentLayerSource,
-        getCurrentRes
-       } from './../Drawer/IndikatorGroup'
+import {
+    getCurrentLayerName,
+    getCurrentLayerSource,
+    getCurrentRes
+} from './../Drawer/IndikatorGroup'
 import {
     useMap
-  } from '@terrestris/react-geo';
-import { useState } from 'react';
+} from '@terrestris/react-geo';
+import { useState, useEffect } from 'react';
 
-export const Footer =():JSX.Element=>{
+export const Footer = (): JSX.Element => {
     const map = useMap();
-
     const [coords, setCoords] = useState<string>("");
-    const [topLayer, setTopLayer] = useState<string>(getCurrentLayerName());     
+    const [topLayer, setTopLayer] = useState<string>("");
+    const [value, setValue] = useState<string>("");
 
+    const [data, setData] = useState(null);
 
-    map.on('change', function event() {
-        setTopLayer(getCurrentLayerName());        
-    });
-    map.on('pointermove', function event(e) {
-        const coords = map.getCoordinateFromPixel(e.coordinate);
-        setCoords("lon "+ coords[0].toFixed(4) + ", lat "+ coords[1].toFixed(4));
-    });
-    map.on('singleclick', function valueListener(event) {
+    /*
 
-        console.log(event.coordinate);
-        console.log(getCurrentLayerName());
-        console.log(getCurrentRes());
+    useEffect(() => {
+      fetch("/api")
+        .then((res) => res.json())
+        .then((data) => setData(data.message));
+    }, []);
 
-        console.log(getCurrentLayerSource()); 
-
-        const url = getCurrentLayerSource().getFeatureInfoUrl(
-            event['coordinate'],
-            getCurrentRes(),
-            'ESPG:3035',
-            {'INFO_FORMAT': 'text/html'}
-        );
-
-        console.log(url);
-
-        if (url) {
-            fetch(url)
-              .then((response) => response.text())
-              .then((info) => {
-                console.log(info);
-              });
-          }
-    });  
+    */
     
-    return(
+ 
+
+    useEffect(() => {
+        map.on('change', function event() {
+            console.log("change");
+            setTopLayer(getCurrentLayerName());
+            setValue("");
+            fetch("/api",{
+                method: 'PUT',
+                headers:{
+                'Content-Type':'application/json'
+                },
+                body: topLayer
+            })
+            .then((res) => res.json())
+            .then((data) => setData(data));
+        });
+        map.on('pointermove', function event(e) {
+            const coords = map.getCoordinateFromPixel(e.coordinate);
+            setCoords("lon " + coords[0].toFixed(4) + ", lat " + coords[1].toFixed(4));
+        });
+
+        map.on('singleclick', function valueListener(event) {
+
+            if (getCurrentLayerSource()) {
+                const url = getCurrentLayerSource().getFeatureInfoUrl(
+                    event['coordinate'],
+                    getCurrentRes(),
+                    'EPSG:3857',
+                    { 'INFO_FORMAT': 'application/json' }
+                );
+
+                if (url) {
+                    fetch(url)
+                        .then((response) => {
+                            return response.text()
+                        })
+                        .then((info) => {
+                            const obj = JSON.parse(info);
+                            const features = obj.hasOwnProperty("features") ? obj.features[0] : null;
+                            const properties = features !== null && features.hasOwnProperty("properties") ? features.properties : null;
+                            if (properties !== null && properties.hasOwnProperty("GRAY_INDEX")) {
+                                setValue(": " + properties.GRAY_INDEX + "/100");
+                            };
+                        });
+                }
+            }
+        });
+
+    }, [map]); 
+ 
+    
+
+    return (
         <div>
-            <div className= "wrapper" />
-            <div className= "footer" >
-                {topLayer}
-                <br/>
+            <div className="wrapper" />
+            <div className="footer" >
+                {data + value}
+                <br />
                 {coords}
-                               
             </div>
-            
+
         </div>
     );
 };

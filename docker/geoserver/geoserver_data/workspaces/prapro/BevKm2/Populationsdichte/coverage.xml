@@ -1,0 +1,123 @@
+<coverage>
+  <id>CoverageInfoImpl--6f054e6:17bf305dfb8:-7fea</id>
+  <name>Populationsdichte</name>
+  <nativeName>Bevjekm2Skaliert</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl--6f054e6:17bf305dfb8:-7ff0</id>
+  </namespace>
+  <title>Populationsdichte</title>
+  <description>Generated from GeoTIFF</description>
+  <keywords>
+    <string>Bevjekm2Skaliert</string>
+    <string>WCS</string>
+    <string>GeoTIFF</string>
+  </keywords>
+  <nativeCRS class="projected">PROJCS[&quot;ETRS89 / LAEA Europe&quot;, 
+  GEOGCS[&quot;ETRS89&quot;, 
+    DATUM[&quot;European Terrestrial Reference System 1989&quot;, 
+      SPHEROID[&quot;GRS 1980&quot;, 6378137.0, 298.257222101, AUTHORITY[&quot;EPSG&quot;,&quot;7019&quot;]], 
+      TOWGS84[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+      AUTHORITY[&quot;EPSG&quot;,&quot;6258&quot;]], 
+    PRIMEM[&quot;Greenwich&quot;, 0.0, AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]], 
+    UNIT[&quot;degree&quot;, 0.017453292519943295], 
+    AXIS[&quot;Geodetic longitude&quot;, EAST], 
+    AXIS[&quot;Geodetic latitude&quot;, NORTH], 
+    AUTHORITY[&quot;EPSG&quot;,&quot;4258&quot;]], 
+  PROJECTION[&quot;Lambert_Azimuthal_Equal_Area&quot;, AUTHORITY[&quot;EPSG&quot;,&quot;9820&quot;]], 
+  PARAMETER[&quot;latitude_of_center&quot;, 52.0], 
+  PARAMETER[&quot;longitude_of_center&quot;, 10.0], 
+  PARAMETER[&quot;false_easting&quot;, 4321000.0], 
+  PARAMETER[&quot;false_northing&quot;, 3210000.0], 
+  UNIT[&quot;m&quot;, 1.0], 
+  AXIS[&quot;Easting&quot;, EAST], 
+  AXIS[&quot;Northing&quot;, NORTH], 
+  AUTHORITY[&quot;EPSG&quot;,&quot;3035&quot;]]</nativeCRS>
+  <srs>EPSG:3035</srs>
+  <nativeBoundingBox>
+    <minx>4031000.0</minx>
+    <maxx>4673000.0</maxx>
+    <miny>2684000.0</miny>
+    <maxy>3552000.0</maxy>
+    <crs class="projected">EPSG:3035</crs>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>5.467632556468186</minx>
+    <maxx>15.498103719517857</maxx>
+    <miny>47.17029657525154</miny>
+    <maxy>55.072400628330705</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>REPROJECT_TO_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="dirName">BevKm2_Bevjekm2Skaliert</entry>
+  </metadata>
+  <store class="coverageStore">
+    <id>CoverageStoreInfoImpl--6f054e6:17bf305dfb8:-7fef</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <simpleConversionEnabled>false</simpleConversionEnabled>
+  <nativeFormat>GeoTIFF</nativeFormat>
+  <grid dimension="2">
+    <range>
+      <low>0 0</low>
+      <high>642 868</high>
+    </range>
+    <transform>
+      <scaleX>1000.0</scaleX>
+      <scaleY>-1000.0</scaleY>
+      <shearX>0.0</shearX>
+      <shearY>0.0</shearY>
+      <translateX>4031500.0</translateX>
+      <translateY>3551500.0</translateY>
+    </transform>
+    <crs>EPSG:3035</crs>
+  </grid>
+  <supportedFormats>
+    <string>GIF</string>
+    <string>PNG</string>
+    <string>JPEG</string>
+    <string>TIFF</string>
+    <string>ArcGrid</string>
+    <string>GEOTIFF</string>
+    <string>ImageMosaic</string>
+    <string>GeoPackage (mosaic)</string>
+  </supportedFormats>
+  <interpolationMethods>
+    <string>nearest neighbor</string>
+    <string>bilinear</string>
+    <string>bicubic</string>
+  </interpolationMethods>
+  <defaultInterpolationMethod>nearest neighbor</defaultInterpolationMethod>
+  <dimensions>
+    <coverageDimension>
+      <name>GRAY_INDEX</name>
+      <description>GridSampleDimension[-Infinity,Infinity]</description>
+      <range>
+        <min>-inf</min>
+        <max>inf</max>
+      </range>
+      <nullValues>
+        <double>-9999.0</double>
+      </nullValues>
+      <dimensionType>
+        <name>REAL_32BITS</name>
+      </dimensionType>
+    </coverageDimension>
+  </dimensions>
+  <parameters>
+    <entry>
+      <string>RescalePixels</string>
+      <boolean>true</boolean>
+    </entry>
+    <entry>
+      <string>InputTransparentColor</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>SUGGESTED_TILE_SIZE</string>
+      <string>512,512</string>
+    </entry>
+  </parameters>
+  <nativeCoverageName>Bevjekm2Skaliert</nativeCoverageName>
+</coverage>

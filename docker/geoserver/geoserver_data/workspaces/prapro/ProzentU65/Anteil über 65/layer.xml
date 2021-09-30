@@ -1,0 +1,17 @@
+<layer>
+  <name>Anteil über 65</name>
+  <id>LayerInfoImpl--6f054e6:17bf305dfb8:-7fe7</id>
+  <type>RASTER</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--6aded266:17bdfbf8a96:-7ffd</id>
+  </defaultStyle>
+  <resource class="coverage">
+    <id>CoverageInfoImpl--6f054e6:17bf305dfb8:-7fe8</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-09-17 12:18:38.267 UTC</dateCreated>
+  <dateModified>2021-09-24 14:02:36.461 UTC</dateModified>
+</layer>

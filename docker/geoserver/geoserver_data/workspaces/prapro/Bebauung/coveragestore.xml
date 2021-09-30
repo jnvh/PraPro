@@ -1,0 +1,13 @@
+<coverageStore>
+  <id>CoverageStoreInfoImpl--5aa4dc98:17c11b251a4:-7f7e</id>
+  <name>Bebauung</name>
+  <type>GeoTIFF</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl--6f054e6:17bf305dfb8:-7ff1</id>
+  </workspace>
+  <__default>false</__default>
+  <dateCreated>2021-09-23 13:29:35.993 UTC</dateCreated>
+  <dateModified>2021-09-23 13:29:38.123 UTC</dateModified>
+  <url>file:praproSource/Bebauung.tif</url>
+</coverageStore>

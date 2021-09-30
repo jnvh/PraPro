@@ -1,0 +1,22 @@
+<layer>
+  <name>Versiegelungsgrad</name>
+  <id>LayerInfoImpl--5aa4dc98:17c11b251a4:-7f8f</id>
+  <type>RASTER</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--5aa4dc98:17c11b251a4:-7f4f</id>
+  </defaultStyle>
+  <styles class="linked-hash-set">
+    <style>
+      <id>StyleInfoImpl--6aded266:17bdfbf8a96:-7ffd</id>
+    </style>
+  </styles>
+  <resource class="coverage">
+    <id>CoverageInfoImpl--5aa4dc98:17c11b251a4:-7f90</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-09-23 13:22:28.830 UTC</dateCreated>
+  <dateModified>2021-09-23 13:43:20.487 UTC</dateModified>
+</layer>

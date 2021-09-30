@@ -3,7 +3,7 @@
         "url": "http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg",
         "name": "Basislayer"
     },
-    "Geoserver": "http://localhost:8080/geoserver/prapro/wms?",
+    "Geoserver": "http://localhost/geoserver/prapro/wms?",
     "LayerNames":[
         "Populationsdichte", 
         "Bebauung",
@@ -12,7 +12,7 @@
         "Hitzewellen"
     ],
     "OverlayLayer": {
-        "url": "http://localhost:8080/geoserver/prapro/wms?",
+        "url": "http://localhost/geoserver/prapro/wms?",
         "name": "OverlayLayer"
     },
     "InitialView":{

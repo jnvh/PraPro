@@ -1,0 +1,17 @@
+<layer>
+  <name>Populationsdichte</name>
+  <id>LayerInfoImpl--6f054e6:17bf305dfb8:-7fe9</id>
+  <type>RASTER</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--6aded266:17bdfbf8a96:-7ffd</id>
+  </defaultStyle>
+  <resource class="coverage">
+    <id>CoverageInfoImpl--6f054e6:17bf305dfb8:-7fea</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-09-17 12:18:24.340 UTC</dateCreated>
+  <dateModified>2021-09-23 13:32:09.794 UTC</dateModified>
+</layer>
