@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 //Antd
-import { Drawer, Card } from 'antd';
+import { Drawer } from 'antd';
 
 //Styles
 import './../../react-geo.css';
@@ -14,7 +14,6 @@ import {
   UnorderedListOutlined
 } from '@ant-design/icons';
 
-
 //ReactGeo
 import {
   SimpleButton,
@@ -23,8 +22,7 @@ import {
 
 //SRC
 import { Tree } from './Tree';
-import { layerGroup } from './IndikatorGroup';
-import { Infobox } from './Infobox/infobox';
+import { Infobox } from '../Infobox/infobox';
 
 export const TreeDrawer = (): JSX.Element => {
   const map = useMap();
@@ -53,7 +51,7 @@ export const TreeDrawer = (): JSX.Element => {
       />
       <Drawer
         title="Layerexplorer"
-        placement="right"
+        placement="left"
         onClose={toggleDrawer}
         visible={visible}
         mask={false}
@@ -61,7 +59,7 @@ export const TreeDrawer = (): JSX.Element => {
       >
         <Tree
           map={map}
-          layerGroup={layerGroup}
+          layerGroup={map.getLayerGroup()}
         />
       </Drawer>
       <Infobox

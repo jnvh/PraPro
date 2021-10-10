@@ -1,7 +1,6 @@
 //Openlayers
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';
-import Projection from 'ol/proj/Projection';
 
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
@@ -13,6 +12,8 @@ import 'ol/ol.css';
 //Config
 import config from '../../configs/config.json';
 
+//Gibt einen ImageLayer zurück der eine ImageWMS Source verwendet, 
+//url und name werden über Paremeter entgegen genommen.
 export const getRasterSource = (url: string, name: string): ImageLayer<ImageWMS> => {
   const raster = new ImageLayer({
     source: new ImageWMS({
@@ -23,10 +24,10 @@ export const getRasterSource = (url: string, name: string): ImageLayer<ImageWMS>
     visible: false,
   });
   raster.setProperties({ name: name });
-  console.log(raster.getSource());
   return raster;
 };
 
+//Ladet den BasisLayer als OlLayerTile über die Config und gibt ihn zurück. Verwendet eine XYZ Source
 export const loadBase = () => {
   const basisLayer = new OlLayerTile({
     source: new XYZSource({
@@ -39,18 +40,24 @@ export const loadBase = () => {
   return basisLayer;
 }
 
-export const loadIdicators = () => {
+//Führt getRasterSource für jeden Indikator in der Config aus und gibt alle als ImageLayer<ImageWMS>[] zurück
+export const loadIdicators = (): OlLayerGroup => {
   const indicators: ImageLayer<ImageWMS>[] = [];
   for (let i = 0; i < config.LayerNames.length; i++) {
     indicators.push(getRasterSource(config.Geoserver, config.LayerNames[i]));
   }
-  return indicators;
+  const layerGroup = new OlLayerGroup({
+    layers: indicators
+  })
+  return layerGroup;
 }
 
-export const layerGroup = new OlLayerGroup({
+//Erstellt eine neue layerGroup und füllt sie mit loadIndicators()
+/*export const layerGroup = new OlLayerGroup({
   layers: loadIdicators()
-});
+});*/
 
+//Erstellt den OverlayLayer als OlLayerTile mit XYZ Source aus der Config und gibt ihn zrück
 export const loadOverlayLayer = () => {
   const overlayLayer = new OlLayerTile({
     source: new XYZSource({
@@ -63,45 +70,46 @@ export const loadOverlayLayer = () => {
   return overlayLayer;
 }
 
+//Erstellt die map und füght BasisLayer, Indikatoren und Overlaylayer hinzu, der View wird in der Config definiert
 export const map = new OlMap({
-  view: new OlView({
-    "center":[788453.4890155146, 6573085.729161344],
-    "zoom": 6,
-    "minZoom": 6
-  }),
+  view: new OlView(config.InitialView),
   layers: [
     loadBase(),
-    layerGroup,
+    loadIdicators(),
     //loadOverlayLayer()
   ]
 });
 
+//gibt den Namen des Indikators zurück der aktuell angezeigt wird, ignoriert Basis- und Overlaylayer
+//Gibt "" zurück wenn keiner visible ist
 export const getCurrentLayerName = (): string => {
   const layers = map.getLayerGroup().getLayersArray();
   for (let i = layers.length - 2; i > 0; i--) {
-      if (layers[i].getVisible()) {
+    if (layers[i].getVisible()) {
       return layers[i].getProperties().name;
     };
   };
   return "";
 };
 
-export const getCurrentLayerSource = () => {
-  
+//gibt die Source des Indikators zurück der aktuell angezeigt wird, ignoriert Basis- und Overlaylayer
+//Gibt null zurück wenn keiner visible ist
+export const getCurrentLayerSource = (): ImageWMS | null => {
   const layers = map.getLayerGroup().getLayersArray();
-
   for (let i = layers.length - 2; i > 0; i--) {
-      if (layers[i].getVisible()) {            
-        return layers[i].getSource();
+    if (layers[i].getVisible()) {
+      return layers[i].getSource();
     };
   };
-  return null;  
+  return null;
 }
 
-export function getCurrentRes():number {
-  const resolution =map.getView().getResolution();
-  if(typeof resolution==="number" ){
-      return resolution; 
+//gibt die Resoultion des Indikators zurück der aktuell angezeigt wird, ignoriert Basis- und Overlaylayer
+//Gibt 0 zurück wenn keiner visible ist
+export function getCurrentRes(): number {
+  const resolution = map.getView().getResolution();
+  if (typeof resolution === "number") {
+    return resolution;
   };
   return 0;
 };

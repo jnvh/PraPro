@@ -18,7 +18,6 @@
     "InitialView":{
         "center":[788453.4890155146, 6573085.729161344],
         "zoom": 6,
-        "minZoom": 6,
-        "projection": "ESPG:3035"
+        "minZoom": 6
     }
 }

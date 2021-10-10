@@ -1,4 +1,5 @@
 import './footer.css';
+import { passMceInput } from '../MCE/passFactors';
 import {
     getCurrentLayerName,
     getCurrentLayerSource,
@@ -12,38 +13,27 @@ import { useState, useEffect } from 'react';
 export const Footer = (): JSX.Element => {
     const map = useMap();
     const [coords, setCoords] = useState<string>("");
-    const [topLayer, setTopLayer] = useState<string>("");
+    const [topLayer, setTopLayer] = useState<string>("lil");
     const [value, setValue] = useState<string>("");
-
-    const [data, setData] = useState(null);
-
-    /*
-
-    useEffect(() => {
-      fetch("/api")
-        .then((res) => res.json())
-        .then((data) => setData(data.message));
-    }, []);
-
-    */
-    
- 
+    const [data, setData] = useState<string>("lul");
 
     useEffect(() => {
         map.on('change', function event() {
-            console.log("change");
             setTopLayer(getCurrentLayerName());
             setValue("");
-            fetch("/api",{
-                method: 'PUT',
-                headers:{
-                'Content-Type':'application/json'
+            const j = {
+                test: getCurrentLayerName()
+            };
+            fetch('/factors', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                body: topLayer
-            })
-            .then((res) => res.json())
-            .then((data) => setData(data));
+                body: passMceInput()
+            }).then((res) => res.json())
+                .then((rep) => setData(rep.test))
         });
+
         map.on('pointermove', function event(e) {
             const coords = map.getCoordinateFromPixel(e.coordinate);
             setCoords("lon " + coords[0].toFixed(4) + ", lat " + coords[1].toFixed(4));
@@ -51,8 +41,9 @@ export const Footer = (): JSX.Element => {
 
         map.on('singleclick', function valueListener(event) {
 
-            if (getCurrentLayerSource()) {
-                const url = getCurrentLayerSource().getFeatureInfoUrl(
+            const source = getCurrentLayerSource();
+            if (source) {
+                const url = source.getFeatureInfoUrl(
                     event['coordinate'],
                     getCurrentRes(),
                     'EPSG:3857',
@@ -76,9 +67,7 @@ export const Footer = (): JSX.Element => {
             }
         });
 
-    }, [map]); 
- 
-    
+    }, [map]);
 
     return (
         <div>
