@@ -13,36 +13,29 @@ export var startServer = function () {
         console.log("test");
         res.send("test");
     });
+    //Test call
     app.post('/test', function (req, res) {
         name = req.body;
         res.send(200);
     });
     //Empfange die Factoren & Extend
-    app.post('/factors', function (req, res) {
-        //Rufe GeoserverRest Api
-        //Speicher Extends und 
+    app.post('/mce', function (req, res) {
+        // Wandel req.body in ein objekt um
+        var dummyweights = [0.1];
+        var dummynames = [""];
+        var input = {
+            factors: dummynames,
+            weights: dummyweights
+        };
+        var mce = mceAnalysis(input);
+        mce.then(function (resolve) {
+            res.send(resolve);
+        }).catch(function (err) {
+            res.send(JSON.stringify(err));
+        });
     });
     var server = app.listen(5000, function () {
         console.log("Calc listening at http://localhost:5000");
     });
 };
 export default startServer;
-/*
-export function getFactors(app){
-    let output;
-    app.post('/factors', (req, res) => {
-        output = req.body;
-        res.send(200);
-    });
-    return output;
-};
-
-export function getextend(app){
-    let output;
-    app.post('/extend', (req, res) => {
-        output = req.body;
-        res.send(200);
-    });
-    return output;
-};
-*/

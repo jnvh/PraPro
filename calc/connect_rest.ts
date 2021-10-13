@@ -1,5 +1,9 @@
 import fs from 'fs';
-import fetch from "node-fetch";
+import fetch from 'node-fetch';
+import { createRequire } from 'module';
+import path from 'path';
+const require = createRequire(import.meta.url);
+const base64 = require('base-64');
 
 export interface restConfig{
     method: string, 
@@ -17,35 +21,32 @@ export interface publishParams{
     storeName: string, 
     workspace: string, 
     url: string,
-    rasterDir: string,
 };
 
 const auth = { user: 'admin', pass: 'geoserver' };
 
-export const config = (method: string) => ({
+const config = (method: string) => ({
     method,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': `Basic ${auth.user}:${auth.pass}`,      
+        'Authorization': `Basic ${base64.encode(`${auth.user}:${auth.pass}`)}`,      
     },    
 });
 
 const testParams = {
     url: 'http://localhost:8080/geoserver/rest',
     workspace: 'prapro',
-    coveragestore: 'result',
     storeName: 'result',
-    rasterDir: './test.zip'
 };
 
-export const createCoverage = async ({storeName, workspace, url}: publishParams) => {
+const createCoverage = async ({storeName, workspace, url}: publishParams) => {
 
-    const path = 'file:///Users/Jan/Desktop/rasterTest/test.tif';
+    const path = 'file:/home/jvanheek/Schreibtisch/PraPro/docker/geoserver/geoserver_data/praproSource/mce/test3.tif';
 
-    const bodyXML = 
-    `
-    <CoverageStore>
+    //bodyXML.replace(/(\r\n\t|\n|\r\t)/gm,"")
+    const bodyXML =     
+    `<CoverageStore>
         <name>${storeName}</name>
         <enabled>true</enabled>
         <type>GeoTIFF</type>
@@ -53,30 +54,37 @@ export const createCoverage = async ({storeName, workspace, url}: publishParams)
         <url>${path}</url>
     </CoverageStore>`;
 
-    console.log(path);
+    
+   
+    const bodyJSON = {
+        "coverageStore": {
+              name: "test",
+              type: "GeoTIFF",
+              workspace: {
+                  name:"prapro"
+              }
+            }
+    };
+    const bodystring = JSON.stringify(bodyJSON);
+    
+   // const bodyJSON = `<coverageStore>\n  <name>test</name>\n  <description>Sample ASCII GRID coverage of Global rainfall.</description>\n  <type>GeoTIFF</type>\n  <enabled>true</enabled>\n  <workspace>\n    <name>prapro</name>\n  </workspace>\n  <__default>true</__default>\n  <url>${path}</url>\n</coverageStore>`;
     const options = {        
         method: 'POST',
         headers: {
-            'Content-Type': 'application/xml',
-            'Accept': 'application/xml',
-            'Authorization': `Basic ${auth.user}:${auth.pass}`,      
+            'Content-Type': 'application/sjon',
+            'Accept': 'application/json',
+            'Authorization': `Basic ${base64.encode(`${auth.user}:${auth.pass}`)}`   
         },
-        body: bodyXML.replace(/(\r\n\t|\n|\r\t)/gm,"")
+        body: bodystring
     };
     console.log(options.body);
     const response = await fetch
         (`${url}/workspaces/prapro/coveragestores`, options);
     const text = await response.text();
-    if (response.ok) {
-        return `Der Coveragestore ${text} wurde erstellt`;
-    } else {
-        throw new Error(`createCoverage: ${response.status}`);
-    }
-};
-
-
-
-    
+    console.log("RESPONSE--------------------------------------------------------------------------------------------------")
+    console.log(response);
+    console.log("RESPONSE-------------------------------------------------------------------------------------------------");
+}; 
 
     /*
 
@@ -109,7 +117,7 @@ export const createCoverage = async ({storeName, workspace, url}: publishParams)
     }
     */
 
-export const upGeotiff = async ({url, workspace, storeName, rasterDir}: publishParams) => {
+const upGeotiff = async ({url, workspace, storeName, rasterDir}: publishParams) => {
 
  
     /*
@@ -139,7 +147,7 @@ export const upGeotiff = async ({url, workspace, storeName, rasterDir}: publishP
     */ 
 };
 
-export const publishGeotiff = (params: publishParams) => {
+const publishGeotiff = (params: publishParams) => {
 
     createCoverage(params).then((Response) => {
         console.log(Response);
@@ -155,5 +163,3 @@ createCoverage(testParams).catch(
         console.log(err);
     }
 );
-//publishGeotiff(testParams);
-export default publishGeotiff;

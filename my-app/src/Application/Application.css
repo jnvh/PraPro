@@ -5,3 +5,9 @@ html, body, #root, .App, #map {
   width: 100%;
   overflow: hidden;
 }
+
+.scale {  
+  position: absolute;
+  bottom: 10px;
+  left: 93%; 
+}

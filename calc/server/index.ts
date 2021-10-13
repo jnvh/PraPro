@@ -1,5 +1,4 @@
 import express from 'express';
-import { mceAnalysis } from './../mce'
 const port = 5000;
 export const startServer = () => {
 

@@ -1,7 +1,8 @@
 //Openlayers
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';
-
+import Geolocation from 'ol/Geolocation';
+import {toLonLat} from 'ol/proj';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
@@ -77,7 +78,8 @@ export const map = new OlMap({
     loadBase(),
     loadIdicators(),
     //loadOverlayLayer()
-  ]
+  ],
+  controls: []
 });
 
 //gibt den Namen des Indikators zurück der aktuell angezeigt wird, ignoriert Basis- und Overlaylayer
@@ -113,5 +115,72 @@ export function getCurrentRes(): number {
   };
   return 0;
 };
+
+//gibt den extend des aktuellen Views zurück
+export function getCurrentExtend() {
+  const ext =  map.getView().calculateExtent(map.getSize());
+  console.log(ext);
+  //const transf = transformExtent(ext,'EPSG:3857','EPSG:3035' );
+  //console.log(transf);
+  /*
+  const min = toLonLat([viewext[1],viewext[0]]);
+  const max = toLonLat([viewext[2],viewext[3]]);
+  console.log(viewext);
+  console.log('Min: ' + min);
+  console.log('Max: ' + max);
+  */
+};
+
+
+export const zoomOut = () => {
+  let currentzoom = map.getView().getZoom();
+  if (currentzoom) {
+    map.getView().animate({
+      zoom: currentzoom - 1,
+      duration: 150
+    })
+  }
+};
+
+export const zoomIn = () => {
+  getCurrentExtend();
+  let currentzoom = map.getView().getZoom();
+  if (currentzoom) {
+    map.getView().animate({
+      zoom: currentzoom + 1,
+      duration: 150
+    })
+  }
+};
+
+export const resetZoom = () => {
+  map.getView().animate({
+    zoom: config.InitialView.zoom
+  })
+};
+
+const geolocation = new Geolocation({
+  trackingOptions: {
+    enableHighAccuracy: true,
+  },
+  projection: map.getView().getProjection(),
+});
+
+
+export const moveToGeolocation = () => {
+  geolocation.setTracking(true);
+  const position = geolocation.getPosition();
+  const size = map.getSize();
+  if(position && size){
+  map.getView().centerOn(position, [50,50], toLonLat(position));
+  }
+  const currentzoom = map.getView().getZoom();
+  if (currentzoom) {
+    map.getView().animate({
+      zoom: 9,
+      duration: 150
+    })
+  }
+}
 
 export default map;

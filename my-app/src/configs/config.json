@@ -19,5 +19,11 @@
         "center":[788453.4890155146, 6573085.729161344],
         "zoom": 6,
         "minZoom": 6
+    },
+    "style":{
+        "maincolor":"#182f5e",
+        "controlcolor":"",
+        "fontsizefooter":"",
+        "shadow":"0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24)"
     }
 }

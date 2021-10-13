@@ -6,16 +6,19 @@ import {
     getCurrentRes
 } from './../Drawer/IndikatorGroup'
 import {
-    useMap
+    useMap,
+    ScaleCombo
 } from '@terrestris/react-geo';
+
 import { useState, useEffect } from 'react';
+import  config  from '../../configs/config.json';
 
 export const Footer = (): JSX.Element => {
     const map = useMap();
     const [coords, setCoords] = useState<string>("");
-    const [topLayer, setTopLayer] = useState<string>("lil");
+    const [topLayer, setTopLayer] = useState<string>("");
     const [value, setValue] = useState<string>("");
-    const [data, setData] = useState<string>("lul");
+    const [data, setData] = useState<string>("");  
 
     useEffect(() => {
         map.on('change', function event() {
@@ -72,11 +75,11 @@ export const Footer = (): JSX.Element => {
     return (
         <div>
             <div className="wrapper" />
-            <div className="footer" >
+            <div className="footer" style={{backgroundColor: config.style.maincolor}} >
                 {data + value}
                 <br />
                 {coords}
-            </div>
+            </div>           
 
         </div>
     );
