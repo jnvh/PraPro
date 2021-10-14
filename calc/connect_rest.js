@@ -129,7 +129,7 @@ if (response.ok) {
 }
 */
 var upGeotiff = function (_a) {
-    var url = _a.url, workspace = _a.workspace, storeName = _a.storeName, rasterDir = _a.rasterDir;
+    var url = _a.url, workspace = _a.workspace, storeName = _a.storeName;
     return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_b) {
             return [2 /*return*/];
@@ -144,6 +144,10 @@ var publishGeotiff = function (params) {
             .catch(function (error) { return console.error(error); });
     }).catch(function (error) { return console.error(error); });
 };
+export function connect_rest(name) {
+    return true;
+}
 createCoverage(testParams).catch(function (err) {
     console.log(err);
 });
+export default connect_rest;

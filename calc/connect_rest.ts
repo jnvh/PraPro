@@ -117,7 +117,7 @@ const createCoverage = async ({storeName, workspace, url}: publishParams) => {
     }
     */
 
-const upGeotiff = async ({url, workspace, storeName, rasterDir}: publishParams) => {
+const upGeotiff = async ({url, workspace, storeName}: publishParams) => {
 
  
     /*
@@ -158,8 +158,14 @@ const publishGeotiff = (params: publishParams) => {
     ).catch(error => console.error(error));
 };
 
+export function  connect_rest(name: string):boolean {
+    return true;   
+}
+
 createCoverage(testParams).catch(
     (err)=>{
         console.log(err);
     }
 );
+
+export default connect_rest;

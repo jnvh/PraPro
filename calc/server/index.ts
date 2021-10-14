@@ -1,9 +1,9 @@
 import express from 'express';
+import {mceHandler}from '../mceHandler';
 const port = 5000;
 export const startServer = () => {
 
     const app = express();
-    let name: string = "";
 
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
@@ -20,31 +20,18 @@ export const startServer = () => {
 
     //Test call
     app.post('/test', (req, res) => {
-        name = req.body;
-        res.send(200);
+        res.send(req.body);
     });
 
     //Empfange die Factoren & Extend
     app.post('/mce', (req, res) => {
-      // Wandel req.body in ein objekt um
-      const dummyweights = [0.1];
-      const dummynames = [""];
-      const input = {
-          factors: dummynames,
-          weights: dummyweights
-      }
-      const mce = mceAnalysis(input);
-      mce.then(
-          (resolve: string) =>{
-              res.send(resolve);
-          }
-      ). catch(
-          (err: string) => {
-              res.send(JSON.stringify(err));
-          }
-      );  
+        /*console.log("logging");
+        const mceHandler = new MceHandler(req.body);
+        console.log(mceHandler.getStatus())
+        mceHandler.startMCE();
+        res.json(mceHandler.getStatus().code);    */    
     });
-
+    
     const server = app.listen(5000, () => {
         console.log(`Calc listening at http://localhost:5000`)
     });

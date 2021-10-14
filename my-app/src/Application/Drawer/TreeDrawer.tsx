@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 //Antd
-import { Drawer } from 'antd';
+import { Drawer, Tooltip } from 'antd';
 
 //Styles
 import './../../react-geo.css';
@@ -33,6 +33,7 @@ export const TreeDrawer = (): JSX.Element => {
 
   return (
     <div className="App">
+      <Tooltip placement="bottomRight" title={'Open Drawer'}>
       <SimpleButton
         style={{ 
           position: 'fixed',
@@ -46,13 +47,13 @@ export const TreeDrawer = (): JSX.Element => {
         onClick={toggleDrawer}
         icon={<UnorderedListOutlined />}
       />
+      </Tooltip>
       <Drawer
         title="Layerexplorer"
         placement="left"
         onClose={toggleDrawer}
         visible={visible}
         mask={false}
-        style={{ opacity: 0.8 }}
       >
         <Tree
           map={map}
