@@ -8,14 +8,16 @@ interface gdalParams {
     raster: string[],
     warpedtemp?: string,
 };
+
 interface WarpParams extends gdalParams {
-    extend: string,
-    sourceSrs?: string,
+    extend: string
 };
+
 interface CalcParams extends gdalParams {
     weights: number[],
     outputName?: string
 };
+
 export interface MceParams extends CalcParams, WarpParams { };
 
 export function getSmallesPixel(raster: string[]): number {
@@ -34,135 +36,130 @@ export function getSmallesPixel(raster: string[]): number {
     return minPix;
 };
 
-export function execGdalWarp(pixelSize: number, extend: string, raster: string,sourceSrs?: string, ) {
-    const srs = sourceSrs ? sourceSrs : 'EPSG:3857';
-    const outPath = `${config.calc.warped}${raster}.tif`;
+export function execGdalWarp(pixelSize: number, extend: string, raster: string, warpedtemp: string): void {
+    const outPath = `${warpedtemp}${raster}.tif`;
     const inputPath = `${config.calc.prepared}${raster}.tif`;
-    const cmnd = `gdalwarp -dstnodata 0.0 -tr ${pixelSize} ${pixelSize} -r near -te ${extend} -te_srs ${srs} -of GTiff ${inputPath} ${outPath}`
-    console.log(cmnd);
+    const cmnd = `gdalwarp -dstnodata 0.0 -tr ${pixelSize} ${pixelSize} -r near -te ${extend} -te_srs 'EPSG:3857' -of GTiff ${inputPath} ${outPath}`;
     try {
-        const gdalWarp = execSync(cmnd);
-        return gdalWarp;
+       const stderr = execSync(cmnd, { stdio: ['ignore', 'ignore', 'pipe'] });
+       if(stderr){
+           console.log("err");
+       } else {
+           console.log("succes");
+       }
     } catch (err) {
-
         throw err;
     };
 };
 
-export function warpFactors({ raster, extend}: WarpParams): string[] {
+export function warpFactors({ raster, extend, warpedtemp }: WarpParams) {
     const res = getSmallesPixel(raster);
-    const logs: string[] = [];
-    console.log(raster.length)
+    const out = warpedtemp ? warpedtemp : config.calc.warped;
     for (let i = 0; i < raster.length; i++) {
-        const warp = execGdalWarp(res, extend, raster[i]);
-        logs.push(warp.toString());
+        try {
+            execGdalWarp(res, extend, raster[i], out);
+        } catch (e) {
+            throw e;
+        }
     };
-    return logs;
 };
-
 
 //Führt Muliplikation mit Gewichtung und Addition durch
 //Bsp. Command: gdal.py -A ./layer1.tif -B ./layer2.tif --outfile=./result.tif --calc"((A*weights[0])+(B*weights[1]))";
-export function execCalc({ raster, weights, warpedtemp, outputName }: CalcParams) {    
-    
+export function execCalc({ raster, weights, warpedtemp, outputName }: CalcParams): void {
+
     const rasterPaths: string[] = [];
     for (let i = 0; i < raster.length; i++) {
         rasterPaths.push(`${warpedtemp}${raster[i]}.tif`);
     };
-    
-    let layerFlags = "";
-    let calc = "";
+
+    let layer = "";
+    let calcExpr = "(";
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     for (let i = 0; i < rasterPaths.length; i++) {
-        if (i > 0) { calc += ' + ' };
-        layerFlags += ` -${alphabet.charAt(i)} ${rasterPaths[i]}`;
-        calc += `(${alphabet.charAt(i)}*${weights[i]})`;
+        if (i > 0) { calcExpr += ' + ' };
+        layer += ` -${alphabet.charAt(i)} ${rasterPaths[i]}`;
+        calcExpr += `(${alphabet.charAt(i)}*${weights[i]})`;
     };
-    calc += ')';    
+    calcExpr += ')';
 
     const outputPath = `${config.calc.mce}${outputName}.tif`
-    const cmnd = `gdal_calc.py ${layerFlags} --outfile=${outputPath} --calc="${calc}"`;
+    const cmnd = `gdal_calc.py ${layer} --outfile=${outputPath} --calc="${calcExpr}"`;
+
     try {
-        const gdalCalcpy = execSync(cmnd);
-        return gdalCalcpy;
+        execSync(cmnd, { stdio: ['ignore', process.stdout, 'ignore'] });
     } catch (err) {
         throw err;
     };
 };
 
-export function doMCE(params: MceParams):string {
-    const tempDir = makeOutDir();
+export function doMCE(params: MceParams): string {
     const outputName = nameGenerator();
+    params.warpedtemp = makeOutDir();
+    params.outputName = outputName;
+
     try {
-        params.warpedtemp = tempDir
         warpFactors(params);
     } catch (e) {
         throw e;
     };
+
     try {
-        params.outputName = outputName;
         execCalc(params);
     } catch (e) {
         throw e;
     };
-    cleanDir(tempDir);
-    return outputName;
+
+    try {
+        cleanDir(params.warpedtemp);
+    } catch (e) {
+        throw e;
+    } finally {
+        return outputName;
+    }
 };
 
-export function makeOutDir(outDir?: string): string {
+///MAth floor und addition
+
+export function nameGenerator(): string {
     const timestamp = new Date().getTime() * Math.floor(Math.random() * 10);
-    const dir = config.calc.warped + timestamp + '/';
+    return 'MCE' + timestamp;
+};
+
+export function makeOutDir(): string {
+    const timestamp = new Date().getTime() * Math.floor(Math.random() * 10);
+    const dir = config.calc.warped + 'warped' + timestamp + '/';
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
         return dir;
     } else {
-        return makeOutDir(dir);
+        return makeOutDir();
     };
-}
+};
 
-export function cleanDir(dir: string) {
+export function cleanDir(dir: string): void {
     fs.rm(dir, { recursive: true }, (err) => {
         if (err) {
-            console.log(dir + 'konnte nicht entfernt werden');
-        } console.log('cleaned');
+            throw new Error("Verzeichnis konnte nicht gelöscht werden");
+        }
     });
 };
 
-export function nameGenerator(): string {
-    const timestamp = new Date().getTime() * Math.floor(Math.random() * 10);
-    return 'MCE' + timestamp;    
-}
+export default doMCE;
 
 //Testeingaben
-
-const testExtend: string = [
-    955442.7350882173,
-    6965590.539027553,
-    1007145.8757782301,
-    7020798.977391465
-].join(" ");
-
-const testFactors: string[] = [
-    'Bevjekm2Skaliert',
-    'Ue65Skaliert',
-    'HeatWaveSpellNorm'
-];
-
-const test ={
-    raster: ['Bevjekm2Skaliert','Ue65Skaliert','HeatWaveSpellNorm'],
-    extend: [955442.7350882173,6965590.539027553,1007145.8757782301, 7020798.977391465],
+/*
+const test = {
+    raster: ['Bevjekm2Skaliert', 'Ue65Skaliert', 'HeatWaveSpellNorm'],
+    extend: [955442.7350882173, 6965590.539027553, 1007145.8757782301, 7020798.977391465],
     weights: [0.3, 0.4, 0.3]
 }
-
-const testWeights: number[] = [0.3, 0.4, 0.3];
-
+*/
 //console.log("TEST1:--------------------------------------------------------------------------------------------------------------");
 //console.log(getSmallesPixel(testFactors));
-console.log("TEST2:--------------------------------------------------------------------------------------------------------------");
+//console.log("TEST2:--------------------------------------------------------------------------------------------------------------");
 //warpFactors({raster: testFactors, extend: testExtend});
 //console.log("TEST3:--------------------------------------------------------------------------------------------------------------");
 //execCalc({ raster: testFactors, weights: testWeights, outputName: 'test1' });
 //console.log("TEST4:--------------------------------------------------------------------------------------------------------------");
-//doMCE({ raster: testFactors, weights: testWeights, extend: testExtend, outputName: testName });
-
-export default doMCE;
+//doMCE({ raster: testFactors, weights: testWeights, extend: testExtend });

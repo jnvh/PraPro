@@ -1,14 +1,14 @@
 {
     "geoserver": {
-        "url": "http://localhost:8080/geoserver",
+        "url": "http://localhost:8080/geoserver/",
         "user": "admin",
         "password": "geoserver",
         "factorws": "prapro",
         "resultws": "prapro",
         "resultstyle": "vulnerability"
-      },
+    },
     "express": {
-        "port": 5000
+        "port": 5050
     },
     "calc":{
         "prepared":"/home/jvanheek/Schreibtisch/PraPro/docker/geoserver/geoserver_data/praproSource/sourceprepared/",
@@ -18,12 +18,5 @@
     "sourcemetadata":{
         "maxPix": 8000,
         "minPix": 10
-    },
-    "test":  
-    {
-        "raster": ["Bevjekm2Skaliert","Ue65Skaliert","HeatWaveSpellNorm"],
-        "extend": "955442.7350882173 6965590.539027553 1007145.8757782301 7020798.977391465",
-        "weights": [0.3, 0.4, 0.3],
-        "gelp": "https://gist.github.com/subfuzion/08c5d85437d5d4f00e58"
     }
   }

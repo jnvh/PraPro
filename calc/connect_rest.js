@@ -35,119 +35,109 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import fetch from 'node-fetch';
+import * as fs from 'fs';
 import { createRequire } from 'module';
 var require = createRequire(import.meta.url);
+var config = require('./configs/config.json');
 var base64 = require('base-64');
-;
-;
-;
-var auth = { user: 'admin', pass: 'geoserver' };
-var config = function (method) { return ({
-    method: method,
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': "Basic " + base64.encode(auth.user + ":" + auth.pass),
-    },
-}); };
-var testParams = {
-    url: 'http://localhost:8080/geoserver/rest',
-    workspace: 'prapro',
-    storeName: 'result',
-};
-var createCoverage = function (_a) {
-    var storeName = _a.storeName, workspace = _a.workspace, url = _a.url;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var path, bodyXML, bodyJSON, bodystring, options, response, text;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    path = 'file:/home/jvanheek/Schreibtisch/PraPro/docker/geoserver/geoserver_data/praproSource/mce/test3.tif';
-                    bodyXML = "<CoverageStore>\n        <name>" + storeName + "</name>\n        <enabled>true</enabled>\n        <type>GeoTIFF</type>\n        <workspace>" + workspace + "</workspace>     \n        <url>" + path + "</url>\n    </CoverageStore>";
-                    bodyJSON = {
-                        "coverageStore": {
-                            name: "test",
-                            type: "GeoTIFF",
-                            workspace: {
-                                name: "prapro"
-                            }
+var postCoveragestore = function (name) { return __awaiter(void 0, void 0, void 0, function () {
+    var bodyJSON, url, response, text;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                bodyJSON = {
+                    coverageStore: {
+                        name: name,
+                        url: "file:praproSource/mce/" + name + ".tif",
+                        type: "GeoTIFF",
+                        workspace: {
+                            name: config.geoserver.resultws
                         }
-                    };
-                    bodystring = JSON.stringify(bodyJSON);
-                    options = {
+                    }
+                };
+                url = config.geoserver.url + "rest/workspaces/" + config.geoserver.resultws + "/coveragestores";
+                return [4 /*yield*/, fetch(url, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/sjon',
-                            'Accept': 'application/json',
-                            'Authorization': "Basic " + base64.encode(auth.user + ":" + auth.pass)
+                            'Content-Type': "application/json",
+                            'Authorization': "Basic " + base64.encode(config.geoserver.user + ":" + config.geoserver.password)
                         },
-                        body: bodystring
-                    };
-                    console.log(options.body);
-                    return [4 /*yield*/, fetch(url + "/workspaces/prapro/coveragestores", options)];
-                case 1:
-                    response = _b.sent();
-                    return [4 /*yield*/, response.text()];
-                case 2:
-                    text = _b.sent();
-                    console.log("RESPONSE--------------------------------------------------------------------------------------------------");
-                    console.log(response);
-                    console.log("RESPONSE-------------------------------------------------------------------------------------------------");
-                    return [2 /*return*/];
-            }
-        });
-    });
-};
-/*
-
-        <url>string</url>
-    <coverages>
-        <link>null</link>
-    </coverages>
-
-
-const coverageStore = {
-    "coverageStore": {
-        "name": storeName,
-        "type": "string",
-        "enabled": true,
-        "workspace": {
-            "name": workspace
+                        body: JSON.stringify(bodyJSON)
+                    })];
+            case 1:
+                response = _a.sent();
+                return [4 /*yield*/, response.text()];
+            case 2:
+                text = _a.sent();
+                if (response.ok) {
+                    return [2 /*return*/, text];
+                }
+                else {
+                    throw new Error("Estellen fehlgeschlagen");
+                }
+                ;
+                return [2 /*return*/];
         }
-    }
-};
-
-const configData: restConfig = config('POST');
-configData.body = JSON.stringify(coverageStore);
-const response = await fetch
-    (`${url}/workspaces/${workspace}/coveragestores`, configData);
-const text = await response.text();
-if (response.ok) {
-    return `Der Coveragestore ${text} wurde erstellt`;
-} else {
-    throw new Error(`createCoverage Error: ${response.status}`);
-}
-*/
-var upGeotiff = function (_a) {
-    var url = _a.url, workspace = _a.workspace, storeName = _a.storeName;
-    return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_b) {
-            return [2 /*return*/];
-        });
     });
+}); };
+var postCoverage = function (name) { return __awaiter(void 0, void 0, void 0, function () {
+    var u, readStream, url, bodyJSON, response, text;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                u = config.calc.mce + 'test.tif.zip';
+                readStream = fs.createReadStream(u);
+                url = config.geoserver.url + "rest/workspaces/" + config.geoserver.resultws + "/coveragestores/" + name + "/test.tif";
+                console.log(url);
+                bodyJSON = {
+                    coverage: {
+                        "description": "Generated from mce",
+                        "enabled": true,
+                        "name": name,
+                        "title": name
+                    }
+                };
+                return [4 /*yield*/, fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/zip',
+                            'Authorization': "Basic " + base64.encode(config.geoserver.user + ":" + config.geoserver.password)
+                        },
+                        body: readStream
+                    })];
+            case 1:
+                response = _a.sent();
+                return [4 /*yield*/, response.text()];
+            case 2:
+                text = _a.sent();
+                if (response.ok) {
+                    return [2 /*return*/, text];
+                }
+                else {
+                    throw new Error("postCoverage Error: " + response.status);
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+var connectrest = function (name) {
+    var out = "";
+    postCoveragestore(name).then(function (response) {
+        console.log(response);
+        return postCoverage(response);
+    }).then(function (response) {
+        console.log(response);
+        out = response;
+    }).catch(function (e) {
+        throw e;
+    });
+    return out;
 };
-var publishGeotiff = function (params) {
-    createCoverage(params).then(function (Response) {
-        console.log(Response);
-        upGeotiff(params)
-            .then(function (response) { return console.log(response); })
-            .catch(function (error) { return console.error(error); });
-    }).catch(function (error) { return console.error(error); });
-};
-export function connect_rest(name) {
-    return true;
+try {
+    var test = postCoverage('test');
+    console.log(test);
 }
-createCoverage(testParams).catch(function (err) {
-    console.log(err);
-});
-export default connect_rest;
+catch (e) {
+    console.log(e);
+}
+export default connectrest;

@@ -1,6 +1,9 @@
 import express from 'express';
-import {mceHandler}from '../mceHandler';
-const port = 5000;
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const config = require('../configs/config.json');
+import { mceHandler } from '../mceHandler.js';
+const port = config.express.port;
 export const startServer = () => {
 
     const app = express();
@@ -25,15 +28,16 @@ export const startServer = () => {
 
     //Empfange die Factoren & Extend
     app.post('/mce', (req, res) => {
-        /*console.log("logging");
-        const mceHandler = new MceHandler(req.body);
-        console.log(mceHandler.getStatus())
-        mceHandler.startMCE();
-        res.json(mceHandler.getStatus().code);    */    
+        try {
+            const result = mceHandler(req.body);
+            res.json({ result: result });
+        } catch {
+            res.send(500);
+        }
     });
-    
-    const server = app.listen(5000, () => {
-        console.log(`Calc listening at http://localhost:5000`)
+
+    const server = app.listen(port, () => {
+        console.log(`Calc listening at http://localhost:${port}`)
     });
 
 };
