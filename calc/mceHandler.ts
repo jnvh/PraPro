@@ -1,10 +1,11 @@
 import doMCE, { MceParams } from "./execGDAL.js";
 import {postCoveragestore, postCoverage} from "./connect_rest.js";
+import config from './configs/config.json';
 
-export function mceHandler(input: any): string {
+export function mceHandler(input: MceParams): string {
     const params: MceParams = {
         raster: [],
-        extend: "",
+        extend: [],
         weights: [],
     };
  
@@ -24,11 +25,23 @@ export function mceHandler(input: any): string {
     }
 }
 
-export function resolveParams(input: any): MceParams {
+export function resolveParams(input: MceParams): MceParams {
     if (input.hasOwnProperty("raster") && input.hasOwnProperty("extend") && input.hasOwnProperty("weights")) {
+
         const raster = input.raster;
         const extend = input.extend;
         const weights = input.weights;
+
+        for(let i = 0; i<raster.length;i++){
+            let check = false;
+            for(let j = 0; i< config.rasterInputs.length;i++){
+                check = (raster[i]===config.rasterInputs[i]);
+            }
+            if(!check){
+                throw new Error("Ungültig");
+            };
+        }
+
         let sum = 0;
         for (let i = 0; i < weights.length; i++) {
             sum += weights[i];

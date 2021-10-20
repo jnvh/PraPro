@@ -13,6 +13,7 @@ import {
     CloseOutlined
 } from '@ant-design/icons';
 import { useState } from 'react';
+import { MCE } from '../MCE/mce';
 
 interface PrioProps {
     factor: string,
@@ -20,10 +21,40 @@ interface PrioProps {
     changeFactor: (name: string, change: boolean) => void
     changeWeight: (name: string, weight: number) => void
 }
+interface PriorisationWrapper {
+    mce: MCE,
+    changeFactor: (name: string, change: boolean) => void
+    changeWeight: (name: string, weight: number) => void
+
+}
+export const PriorisationWrapper = ({ mce, changeFactor, changeWeight }: PriorisationWrapper): JSX.Element => {
+    if (mce.factors.length === 0) {
+        return (
+            <div>
+                Fügen Sie Factoren durch anclicken hinzu
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                {
+                    mce.factors.map(layer => (
+                        <Priorisation
+                            factor={layer.factor}
+                            weight={layer.weight}
+                            changeFactor={changeFactor}
+                            changeWeight={changeWeight}
+                        />
+                    ))
+                }
+            </div>
+        )
+    }
+}
 
 export const Priorisation = ({ factor, weight, changeFactor, changeWeight }: PrioProps): JSX.Element => {
     const [value, setValue] = useState<number>(5);
-    
+
     const onChange = (change: number) => {
         setValue(change);
         changeWeight(factor, change);
@@ -61,5 +92,7 @@ export const Priorisation = ({ factor, weight, changeFactor, changeWeight }: Pri
         </Row>
     );
 };
+
+
 
 

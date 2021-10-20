@@ -5,7 +5,8 @@ import 'antd/dist/antd.css';
 import './../Drawer/drawer.css'
 import { MCE } from '../MCE/mce';
 import { Drawer, Button } from 'antd';
-import { Priorisation } from '../Priorisation/priorisation'
+import {LeftOutlined} from '@ant-design/icons';
+import { Priorisation, PriorisationWrapper } from '../Priorisation/priorisation'
 import startMce from '../MCE/mce';
 
 interface AhpDrawerProps {
@@ -20,6 +21,8 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor,changeWeight }: 
   const onClick = () =>{
     startMce(mce);
   }
+
+  console.log(mce.factors.length);
     return (
         <Drawer
           title="test"
@@ -29,17 +32,23 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor,changeWeight }: 
           width={600}
           className={"ahpDrawer"}
           onClose={onClose}
-        >
-          {
-            mce.factors.map(layer => (
-              <Priorisation 
-                factor={layer.factor} 
-                weight={layer.weight} 
-                changeFactor={changeFactor} 
-                changeWeight={changeWeight} 
-              />
-            ))
-          }
+          getContainer={false}
+          closeIcon={<LeftOutlined />}
+        > 
+        <div style={{height: "100px"}}>
+        Hier steht was furchtbar intformatives
+        <br/>
+        <Button
+          type="text"
+          className="startButton">
+          Öffne Erklärung
+        </Button>
+        </div>
+          <PriorisationWrapper 
+          mce={mce}
+          changeFactor={changeFactor}
+          changeWeight={changeWeight}
+          />
 
           <Button onClick={onClick} >
             Starte die Berechnung
