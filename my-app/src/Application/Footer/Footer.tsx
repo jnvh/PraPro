@@ -1,13 +1,13 @@
 import './footer.css';
 import { passMceInput } from '../MCE/passFactors';
 import {
+    getCurrentExtend,
     getCurrentLayerName,
     getCurrentLayerSource,
     getCurrentRes
-} from './../Drawer/IndikatorGroup'
+} from '../mapController/IndikatorGroup'
 import {
-    useMap,
-    ScaleCombo
+    useMap
 } from '@terrestris/react-geo';
 
 import { useState, useEffect } from 'react';
@@ -19,6 +19,7 @@ export const Footer = (): JSX.Element => {
     const [topLayer, setTopLayer] = useState<string>("");
     const [value, setValue] = useState<string>("");
     const [data, setData] = useState<string>("");  
+    
 
     useEffect(() => {
         map.on('change', function event() {
@@ -27,14 +28,6 @@ export const Footer = (): JSX.Element => {
             const j = {
                 test: getCurrentLayerName()
             };
-            fetch('/factors', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: passMceInput()
-            }).then((res) => res.json())
-                .then((rep) => setData(rep.test))
         });
 
         map.on('pointermove', function event(e) {
@@ -42,8 +35,11 @@ export const Footer = (): JSX.Element => {
             setCoords("lon " + coords[0].toFixed(4) + ", lat " + coords[1].toFixed(4));
         });
 
-        map.on('singleclick', function valueListener(event) {
-
+        map.on('singleclick', function valueListener(event) {            
+            const test = map.getLayers();
+            console.log(test);
+            const coords = map.getCoordinateFromPixel(event.coordinate);
+            const ext = getCurrentExtend();  
             const source = getCurrentLayerSource();
             if (source) {
                 const url = source.getFeatureInfoUrl(

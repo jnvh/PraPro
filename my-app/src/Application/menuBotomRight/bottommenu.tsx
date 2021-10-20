@@ -17,7 +17,7 @@ import {
     resetZoom,
     moveToGeolocation
 }
-    from './../Drawer/IndikatorGroup';
+    from '../mapController/IndikatorGroup';
 
 
 export const BottomMenu = (): JSX.Element | null => {
@@ -70,25 +70,5 @@ export const BottomMenu = (): JSX.Element | null => {
     }
     return null;
 };
-/*
-export const MenuBotton = () => {
-    const [showMenu, setMenu] = useState<boolean>(false);
-    const toggleMenu = (): void => {
-        setMenu(!showMenu);
-    }
 
-    return(
-        <div>
-            <Button
-                type="primary" ghost
-                className="menuButtonBottom"
-                icon={<ArrowUpOutlined />}
-                onClick={toggleMenu}
-            />
-            <BottomMenu/>
-        </div>
-    )
-
-}
-*/
 export default BottomMenu;

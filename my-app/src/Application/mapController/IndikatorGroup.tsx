@@ -1,16 +1,13 @@
-//Openlayers
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';
 import Geolocation from 'ol/Geolocation';
-import {toLonLat} from 'ol/proj';
+import { toLonLat } from 'ol/proj';
 import OlMap from 'ol/Map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerGroup from 'ol/layer/Group';
 import XYZSource from 'ol/source/XYZ';
-//Styles
 import 'ol/ol.css';
-//Config
 import config from '../../configs/config.json';
 
 //Gibt einen ImageLayer zurück der eine ImageWMS Source verwendet, 
@@ -47,16 +44,40 @@ export const loadIdicators = (): OlLayerGroup => {
   for (let i = 0; i < config.LayerNames.length; i++) {
     indicators.push(getRasterSource(config.Geoserver, config.LayerNames[i]));
   }
+  
   const layerGroup = new OlLayerGroup({
     layers: indicators
   })
+  layerGroup.setProperties({ name: "Indikatoren" });
   return layerGroup;
 }
 
-//Erstellt eine neue layerGroup und füllt sie mit loadIndicators()
-/*export const layerGroup = new OlLayerGroup({
-  layers: loadIdicators()
-});*/
+const results: string[] =[];
+export const loadResults = (): OlLayerGroup => {
+  const resultLayer: ImageLayer<ImageWMS>[] = [];
+  if (results) {
+    for (let i = 0; i < results.length; i++) {
+      resultLayer.push(getRasterSource(config.Geoserver, results[i]));
+    }
+  }
+  console.log(resultLayer);
+  const layerGroup = new OlLayerGroup({
+    layers: resultLayer
+  })
+  layerGroup.setProperties({ name: "Ergebnisse" });
+  return layerGroup;
+};
+
+
+
+export const addResult = (name: string):void => {
+  results.push(name);
+  map.setLayers([
+    loadBase(),
+    loadResults(),
+    loadIdicators(),
+  ])
+}
 
 //Erstellt den OverlayLayer als OlLayerTile mit XYZ Source aus der Config und gibt ihn zrück
 export const loadOverlayLayer = () => {
@@ -74,10 +95,11 @@ export const loadOverlayLayer = () => {
 //Erstellt die map und füght BasisLayer, Indikatoren und Overlaylayer hinzu, der View wird in der Config definiert
 export const map = new OlMap({
   view: new OlView(config.InitialView),
-  layers: [
+  layers:
+   [
+    loadResults(),
     loadBase(),
-    loadIdicators(),
-    //loadOverlayLayer()
+    loadIdicators(),    
   ],
   controls: []
 });
@@ -118,17 +140,8 @@ export function getCurrentRes(): number {
 
 //gibt den extend des aktuellen Views zurück
 export function getCurrentExtend() {
-  const ext =  map.getView().calculateExtent(map.getSize());
-  console.log(ext);
-  //const transf = transformExtent(ext,'EPSG:3857','EPSG:3035' );
-  //console.log(transf);
-  /*
-  const min = toLonLat([viewext[1],viewext[0]]);
-  const max = toLonLat([viewext[2],viewext[3]]);
-  console.log(viewext);
-  console.log('Min: ' + min);
-  console.log('Max: ' + max);
-  */
+  const ext = map.getView().calculateExtent(map.getSize());
+  return ext;
 };
 
 
@@ -171,8 +184,8 @@ export const moveToGeolocation = () => {
   geolocation.setTracking(true);
   const position = geolocation.getPosition();
   const size = map.getSize();
-  if(position && size){
-  map.getView().centerOn(position, [50,50], toLonLat(position));
+  if (position && size) {
+    map.getView().centerOn(position, [50, 50], toLonLat(position));
   }
   const currentzoom = map.getView().getZoom();
   if (currentzoom) {

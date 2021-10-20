@@ -1,4 +1,5 @@
 import doMCE from "./execGDAL.js";
+import { postCoveragestore, postCoverage } from "./connect_rest.js";
 export function mceHandler(input) {
     var params = {
         raster: [],
@@ -10,25 +11,16 @@ export function mceHandler(input) {
         params.raster = resolved.raster;
         params.extend = resolved.extend;
         params.weights = resolved.weights;
-    }
-    catch (e) {
-        throw e;
-    }
-    try {
         var output = doMCE(params);
-        /*try{
-            const rest = connect_rest(output);
-            return output;
-        } catch (e){
-            throw e;
-        }*/
-        //Zeile später löschen
+        postCoveragestore(output);
+        postCoverage(output);
+        //updateStyle(output)
+        console.log("MCEHandler: " + output);
         return output;
     }
     catch (e) {
         throw e;
     }
-    ;
 }
 export function resolveParams(input) {
     if (input.hasOwnProperty("raster") && input.hasOwnProperty("extend") && input.hasOwnProperty("weights")) {

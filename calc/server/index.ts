@@ -3,11 +3,10 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const config = require('../configs/config.json');
 import { mceHandler } from '../mceHandler.js';
-const port = config.express.port;
+
 export const startServer = () => {
-
+    const port = config.express.port;
     const app = express();
-
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
 
@@ -21,18 +20,13 @@ export const startServer = () => {
         res.send("test")
     });
 
-    //Test call
-    app.post('/test', (req, res) => {
-        res.send(req.body);
-    });
-
     //Empfange die Factoren & Extend
     app.post('/mce', (req, res) => {
         try {
             const result = mceHandler(req.body);
             res.json({ result: result });
         } catch {
-            res.send(500);
+            res.json({status:500});
         }
     });
 

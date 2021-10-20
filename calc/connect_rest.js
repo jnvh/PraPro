@@ -35,12 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import fetch from 'node-fetch';
-import * as fs from 'fs';
 import { createRequire } from 'module';
 var require = createRequire(import.meta.url);
 var config = require('./configs/config.json');
 var base64 = require('base-64');
-var postCoveragestore = function (name) { return __awaiter(void 0, void 0, void 0, function () {
+export var postCoveragestore = function (name) { return __awaiter(void 0, void 0, void 0, function () {
     var bodyJSON, url, response, text;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -50,6 +49,7 @@ var postCoveragestore = function (name) { return __awaiter(void 0, void 0, void 
                         name: name,
                         url: "file:praproSource/mce/" + name + ".tif",
                         type: "GeoTIFF",
+                        enabled: true,
                         workspace: {
                             name: config.geoserver.resultws
                         }
@@ -69,41 +69,42 @@ var postCoveragestore = function (name) { return __awaiter(void 0, void 0, void 
                 return [4 /*yield*/, response.text()];
             case 2:
                 text = _a.sent();
+                console.log("CoverageStore: " + text);
                 if (response.ok) {
                     return [2 /*return*/, text];
                 }
                 else {
-                    throw new Error("Estellen fehlgeschlagen");
+                    throw new Error("Erstellen fehlgeschlagen");
                 }
                 ;
                 return [2 /*return*/];
         }
     });
 }); };
-var postCoverage = function (name) { return __awaiter(void 0, void 0, void 0, function () {
-    var u, readStream, url, bodyJSON, response, text;
+export var postCoverage = function (name) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, bodyJSON, response, text;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                u = config.calc.mce + 'test.tif.zip';
-                readStream = fs.createReadStream(u);
-                url = config.geoserver.url + "rest/workspaces/" + config.geoserver.resultws + "/coveragestores/" + name + "/test.tif";
-                console.log(url);
+                url = config.geoserver.url + "rest/workspaces/" + config.geoserver.resultws + "/coveragestores/" + name + "/coverages";
                 bodyJSON = {
                     coverage: {
+                        "abstract": "test",
+                        "defaultInterpolationMethod": "nearest neighbor",
+                        "name": name,
                         "description": "Generated from mce",
                         "enabled": true,
-                        "name": name,
-                        "title": name
+                        "title": name,
+                        "srs": "EPSG:3035",
                     }
                 };
                 return [4 /*yield*/, fetch(url, {
-                        method: 'PUT',
+                        method: 'POST',
                         headers: {
-                            'Content-Type': 'application/zip',
-                            'Authorization': "Basic " + base64.encode(config.geoserver.user + ":" + config.geoserver.password)
+                            'Content-Type': 'application/json',
+                            'Authorization': "Basic " + base64.encode(config.geoserver.user + ":" + config.geoserver.password),
                         },
-                        body: readStream
+                        body: JSON.stringify(bodyJSON)
                     })];
             case 1:
                 response = _a.sent();
@@ -120,24 +121,8 @@ var postCoverage = function (name) { return __awaiter(void 0, void 0, void 0, fu
         }
     });
 }); };
-var connectrest = function (name) {
-    var out = "";
-    postCoveragestore(name).then(function (response) {
-        console.log(response);
-        return postCoverage(response);
-    }).then(function (response) {
-        console.log(response);
-        out = response;
-    }).catch(function (e) {
-        throw e;
+export var updateStyle = function (name) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/];
     });
-    return out;
-};
-try {
-    var test = postCoverage('test');
-    console.log(test);
-}
-catch (e) {
-    console.log(e);
-}
-export default connectrest;
+}); };

@@ -29,15 +29,9 @@ export function getSmallesPixel(raster) {
 export function execGdalWarp(pixelSize, extend, raster, warpedtemp) {
     var outPath = "" + warpedtemp + raster + ".tif";
     var inputPath = "" + config.calc.prepared + raster + ".tif";
-    var cmnd = "gdalwarp -dstnodata 0.0 -tr " + pixelSize + " " + pixelSize + " -r near -te " + extend + " -te_srs 'EPSG:3857' -of GTiff " + inputPath + " " + outPath;
+    var cmnd = "gdalwarp -t_srs EPSG:3035 -dstnodata 0.0 -tr " + pixelSize + " " + pixelSize + " -r near -te " + extend + " -te_srs 'EPSG:3857' -of GTiff " + inputPath + " " + outPath;
     try {
         var stderr = execSync(cmnd, { stdio: ['ignore', 'ignore', 'pipe'] });
-        if (stderr) {
-            console.log("err");
-        }
-        else {
-            console.log("succes");
-        }
     }
     catch (err) {
         throw err;
@@ -99,12 +93,6 @@ export function doMCE(params) {
     params.outputName = outputName;
     try {
         warpFactors(params);
-    }
-    catch (e) {
-        throw e;
-    }
-    ;
-    try {
         execCalc(params);
     }
     catch (e) {
@@ -122,9 +110,8 @@ export function doMCE(params) {
     }
 }
 ;
-///MAth floor und addition
 export function nameGenerator() {
-    var timestamp = new Date().getTime() * Math.floor(Math.random() * 10);
+    var timestamp = new Date().getTime() + Math.floor(Math.random() * 10);
     return 'MCE' + timestamp;
 }
 ;

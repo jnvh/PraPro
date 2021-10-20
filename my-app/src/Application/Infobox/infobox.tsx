@@ -1,5 +1,5 @@
 import './infobox.css';
-import { getCurrentLayerName } from '../Drawer/IndikatorGroup';
+import { getCurrentLayerName } from '../mapController/IndikatorGroup';
 import desc from '../../configs/desc.json';
 import { Card } from 'antd';
 

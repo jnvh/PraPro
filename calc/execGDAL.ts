@@ -39,14 +39,9 @@ export function getSmallesPixel(raster: string[]): number {
 export function execGdalWarp(pixelSize: number, extend: string, raster: string, warpedtemp: string): void {
     const outPath = `${warpedtemp}${raster}.tif`;
     const inputPath = `${config.calc.prepared}${raster}.tif`;
-    const cmnd = `gdalwarp -dstnodata 0.0 -tr ${pixelSize} ${pixelSize} -r near -te ${extend} -te_srs 'EPSG:3857' -of GTiff ${inputPath} ${outPath}`;
+    const cmnd = `gdalwarp -t_srs EPSG:3035 -dstnodata 0.0 -tr ${pixelSize} ${pixelSize} -r near -te ${extend} -te_srs 'EPSG:3857' -of GTiff ${inputPath} ${outPath}`;
     try {
        const stderr = execSync(cmnd, { stdio: ['ignore', 'ignore', 'pipe'] });
-       if(stderr){
-           console.log("err");
-       } else {
-           console.log("succes");
-       }
     } catch (err) {
         throw err;
     };
@@ -100,11 +95,6 @@ export function doMCE(params: MceParams): string {
 
     try {
         warpFactors(params);
-    } catch (e) {
-        throw e;
-    };
-
-    try {
         execCalc(params);
     } catch (e) {
         throw e;
@@ -119,10 +109,8 @@ export function doMCE(params: MceParams): string {
     }
 };
 
-///MAth floor und addition
-
 export function nameGenerator(): string {
-    const timestamp = new Date().getTime() * Math.floor(Math.random() * 10);
+    const timestamp = new Date().getTime() + Math.floor(Math.random() * 10);
     return 'MCE' + timestamp;
 };
 

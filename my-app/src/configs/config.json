@@ -6,10 +6,10 @@
     "Geoserver": "http://localhost/geoserver/prapro/wms?",
     "LayerNames":[
         "Populationsdichte", 
-        "Bebauung",
-        "Anteil über 65",
-        "Versiegelungsgrad",
-        "Hitzewellen"
+        "Aelter als 65",
+        "Versigelungsgrad",
+        "Hitzewellen",
+        "MCE1634733820858"
     ],
     "OverlayLayer": {
         "url": "http://localhost/geoserver/prapro/wms?",

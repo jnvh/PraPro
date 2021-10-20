@@ -1,4 +1,4 @@
-import { getCurrentExtend } from '../Drawer/IndikatorGroup'
+import { getCurrentExtend } from '../mapController/IndikatorGroup'
 
 interface mceInput {
     factors: string[],

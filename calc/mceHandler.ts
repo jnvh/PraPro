@@ -1,5 +1,5 @@
 import doMCE, { MceParams } from "./execGDAL.js";
-import connect_rest from "./connect_rest.js";
+import {postCoveragestore, postCoverage} from "./connect_rest.js";
 
 export function mceHandler(input: any): string {
     const params: MceParams = {
@@ -13,24 +13,15 @@ export function mceHandler(input: any): string {
         params.raster = resolved.raster;
         params.extend = resolved.extend;
         params.weights = resolved.weights;
+        const output: string = doMCE(params);
+        postCoveragestore(output);
+        postCoverage(output);
+        //updateStyle(output)
+        console.log("MCEHandler: " + output);
+        return output;
     } catch (e) {
         throw e;
     }
-
-    try {
-        const output: string = doMCE(params);
-        /*try{
-            const rest = connect_rest(output);
-            return output;
-        } catch (e){
-            throw e;
-        }*/
-        //Zeile später löschen
-        return output;
-        
-    } catch (e) {
-        throw e;
-    };
 }
 
 export function resolveParams(input: any): MceParams {
@@ -53,7 +44,6 @@ export function resolveParams(input: any): MceParams {
         }
     } else {
         throw new Error("Ungültig");
-
     };
 };
 
