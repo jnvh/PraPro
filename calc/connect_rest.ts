@@ -37,6 +37,7 @@ export const postCoveragestore = async (name: string) => {
 export const postCoverage = async (name: string) => {  
 
     const url = `${config.geoserver.url}rest/workspaces/${config.geoserver.resultws}/coveragestores/${name}/coverages`;
+    console.log(url);
     
     const bodyJSON = {
         coverage: {
@@ -49,6 +50,8 @@ export const postCoverage = async (name: string) => {
             "srs": "EPSG:3035",
         }
     };
+
+    console.log(bodyJSON);
     const response = await fetch(url,
         {
             method: 'POST',

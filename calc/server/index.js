@@ -2,7 +2,7 @@ import express from 'express';
 import { createRequire } from 'module';
 var require = createRequire(import.meta.url);
 var config = require('../configs/config.json');
-import { mceHandler } from '../mceHandler.js';
+import mceHandler from '../mceHandler.js';
 export var startServer = function () {
     var port = config.express.port;
     var app = express();

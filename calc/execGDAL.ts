@@ -10,7 +10,7 @@ interface gdalParams {
 };
 
 interface WarpParams extends gdalParams {
-    extend: string
+    extend: number[]
 };
 
 interface CalcParams extends gdalParams {
@@ -49,10 +49,11 @@ export function execGdalWarp(pixelSize: number, extend: string, raster: string, 
 
 export function warpFactors({ raster, extend, warpedtemp }: WarpParams) {
     const res = getSmallesPixel(raster);
+    const ext = extend.join(" ");
     const out = warpedtemp ? warpedtemp : config.calc.warped;
     for (let i = 0; i < raster.length; i++) {
         try {
-            execGdalWarp(res, extend, raster[i], out);
+            execGdalWarp(res, ext, raster[i], out);
         } catch (e) {
             throw e;
         }
@@ -135,19 +136,22 @@ export function cleanDir(dir: string): void {
 
 export default doMCE;
 
-//Testeingaben
-/*
-const test = {
-    raster: ['Bevjekm2Skaliert', 'Ue65Skaliert', 'HeatWaveSpellNorm'],
-    extend: [955442.7350882173, 6965590.539027553, 1007145.8757782301, 7020798.977391465],
-    weights: [0.3, 0.4, 0.3]
+const test: MceParams={
+    "raster": ["Populationsdichte", "Hitzewellen"],
+    "extend": [1204113.4863363097, 6516753.637062674, 1223309.2831282716, 6537250.843806634],
+    "weights": [0.3, 0.6]
 }
-*/
-//console.log("TEST1:--------------------------------------------------------------------------------------------------------------");
-//console.log(getSmallesPixel(testFactors));
-//console.log("TEST2:--------------------------------------------------------------------------------------------------------------");
-//warpFactors({raster: testFactors, extend: testExtend});
-//console.log("TEST3:--------------------------------------------------------------------------------------------------------------");
-//execCalc({ raster: testFactors, weights: testWeights, outputName: 'test1' });
-//console.log("TEST4:--------------------------------------------------------------------------------------------------------------");
-//doMCE({ raster: testFactors, weights: testWeights, extend: testExtend });
+
+const outputName = nameGenerator();
+test.warpedtemp = makeOutDir();
+test.outputName = outputName;
+
+/*
+try{
+    console.log("test")
+    warpFactors(test);
+    console.log("test2")
+    execCalc(test);
+} catch (e){
+    console.log(e);
+}*/

@@ -9,7 +9,7 @@ import {
   Tooltip,
   Button,
 } from 'antd';
-import { RightSquareOutlined } from '@ant-design/icons';
+import { RightSquareOutlined, LeftOutlined } from '@ant-design/icons';
 import { useMap } from '@terrestris/react-geo';
 import { Tree } from './Tree';
 import { AhpDrawer } from '../ahpDrawer/ahpDrawer';
@@ -34,8 +34,8 @@ export const TreeDrawer = (): JSX.Element => {
 
   const changeFactor = (name: string, change: boolean) => {
     if (change) {
-      for(let i = 0;i<mce.factors.length;i++){
-        if(mce.factors[i].factor===name){
+      for (let i = 0; i < mce.factors.length; i++) {
+        if (mce.factors[i].factor === name) {
           return;
         }
       }
@@ -66,7 +66,7 @@ export const TreeDrawer = (): JSX.Element => {
     setMce(re);
   }
 
-  
+
   const toggleDrawer = (): void => {
     setVisible(!visible);
     if (ahp) { toggleAhp() }
@@ -94,20 +94,33 @@ export const TreeDrawer = (): JSX.Element => {
         onClose={toggleDrawer}
         visible={visible}
         mask={false}
-        push={{ distance: 600 }}
+        width={280}
         className="treeDrawer"
+        closeIcon={<LeftOutlined />}
       >
+        <div style={{height: "100px"}}>
+        Hier steht was furchtbar intformatives
+        <br/>
+        <Button
+          type="text"
+          className="startButton">
+          Öffne Erklärung
+        </Button>
+        <br/>
         <Button
           type="text"
           className="startButton"
           onClick={toggleAhp}>
           Öffne Mce
         </Button>
+        </div>
         <Tree
           map={map}
           layerGroup={map.getLayerGroup()}
           onClick={changeFactor}
         />
+      </Drawer>
+      <div className="drawerWrapper">
         <AhpDrawer
           mce={mce}
           visible={ahp}
@@ -115,7 +128,7 @@ export const TreeDrawer = (): JSX.Element => {
           changeFactor={changeFactor}
           changeWeight={changeWeight}
         />
-      </Drawer>
+      </div>
 
     </div>
   );

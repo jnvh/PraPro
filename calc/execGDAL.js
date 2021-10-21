@@ -42,10 +42,11 @@ export function execGdalWarp(pixelSize, extend, raster, warpedtemp) {
 export function warpFactors(_a) {
     var raster = _a.raster, extend = _a.extend, warpedtemp = _a.warpedtemp;
     var res = getSmallesPixel(raster);
+    var ext = extend.join(" ");
     var out = warpedtemp ? warpedtemp : config.calc.warped;
     for (var i = 0; i < raster.length; i++) {
         try {
-            execGdalWarp(res, extend, raster[i], out);
+            execGdalWarp(res, ext, raster[i], out);
         }
         catch (e) {
             throw e;
@@ -137,19 +138,20 @@ export function cleanDir(dir) {
 }
 ;
 export default doMCE;
-//Testeingaben
+var test = {
+    "raster": ["Populationsdichte", "Hitzewellen"],
+    "extend": [1204113.4863363097, 6516753.637062674, 1223309.2831282716, 6537250.843806634],
+    "weights": [0.3, 0.6]
+};
+var outputName = nameGenerator();
+test.warpedtemp = makeOutDir();
+test.outputName = outputName;
 /*
-const test = {
-    raster: ['Bevjekm2Skaliert', 'Ue65Skaliert', 'HeatWaveSpellNorm'],
-    extend: [955442.7350882173, 6965590.539027553, 1007145.8757782301, 7020798.977391465],
-    weights: [0.3, 0.4, 0.3]
-}
-*/
-//console.log("TEST1:--------------------------------------------------------------------------------------------------------------");
-//console.log(getSmallesPixel(testFactors));
-//console.log("TEST2:--------------------------------------------------------------------------------------------------------------");
-//warpFactors({raster: testFactors, extend: testExtend});
-//console.log("TEST3:--------------------------------------------------------------------------------------------------------------");
-//execCalc({ raster: testFactors, weights: testWeights, outputName: 'test1' });
-//console.log("TEST4:--------------------------------------------------------------------------------------------------------------");
-//doMCE({ raster: testFactors, weights: testWeights, extend: testExtend });
+try{
+    console.log("test")
+    warpFactors(test);
+    console.log("test2")
+    execCalc(test);
+} catch (e){
+    console.log(e);
+}*/ 

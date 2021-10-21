@@ -87,6 +87,7 @@ export var postCoverage = function (name) { return __awaiter(void 0, void 0, voi
         switch (_a.label) {
             case 0:
                 url = config.geoserver.url + "rest/workspaces/" + config.geoserver.resultws + "/coveragestores/" + name + "/coverages";
+                console.log(url);
                 bodyJSON = {
                     coverage: {
                         "abstract": "test",
@@ -98,6 +99,7 @@ export var postCoverage = function (name) { return __awaiter(void 0, void 0, voi
                         "srs": "EPSG:3035",
                     }
                 };
+                console.log(bodyJSON);
                 return [4 /*yield*/, fetch(url, {
                         method: 'POST',
                         headers: {

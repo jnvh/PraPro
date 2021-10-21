@@ -1,3 +1,4 @@
+
 {
     "geoserver": {
         "url": "http://localhost:8080/geoserver/",
@@ -18,5 +19,11 @@
     "sourcemetadata":{
         "maxPix": 8000,
         "minPix": 10
-    }
+    },
+    "rasterInputs":[
+        "Populationsdichte", 
+        "Aelter als 65",
+        "Versigelungsgrad",
+        "Hitzewellen"
+    ]
   }
