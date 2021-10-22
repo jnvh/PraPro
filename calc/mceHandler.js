@@ -11,18 +11,13 @@ export function mceHandler(input) {
     };
     try {
         var resolved = resolveParams(input);
-        console.log("test1");
         params.raster = resolved.raster;
         params.extend = resolved.extend;
         params.weights = resolved.weights;
-        console.log(params);
         var output = doMCE(params);
-        console.log("test1");
-        console.log(output);
         postCoveragestore(output);
         postCoverage(output);
-        //updateStyle(output)
-        console.log("MCEHandler: " + output);
+        //updateStyle(output);
         return output;
     }
     catch (e) {
@@ -34,8 +29,6 @@ export function resolveParams(input) {
         var raster = input.raster;
         var extend = input.extend;
         var weights = input.weights;
-        console.log(typeof (extend[0]));
-        console.log(raster.length);
         for (var i = 0; i < raster.length; i++) {
             var check = false;
             for (var j = 0; j < config.rasterInputs.length; i++) {
@@ -79,11 +72,11 @@ var test = {
     "extend": [1204113.4863363097, 6516753.637062674, 1223309.2831282716, 6537250.843806634],
     "weights": [0.3, 0.6]
 };
-try {
+/*
+try{
     console.log("test");
-    var c = mceHandler(test);
+    const c = mceHandler(test);
     console.log(c);
-}
-catch (e) {
+} catch (e){
     console.log(e);
-}
+}*/ 

@@ -1,5 +1,4 @@
 import { getCurrentExtend } from '../mapController/IndikatorGroup';
-import { addResult } from '../mapController/IndikatorGroup';
 
 export interface Factor{
     factor: string,
@@ -9,22 +8,21 @@ export interface MCE{
     factors: Factor[]
 }
 
-export const startMce = (mce: MCE) =>{
+export const startMce = async (mce: MCE) =>{
     const input = reseolveInput(mce);
-    console.log(input)
-
-
-    fetch('mce', {
+    //const result: string[] = [];
+    
+    const response = await fetch('mce', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(input)
-    }).then((res)=>res.json())
-    .then((json)=>{
-        const result = json.hasOwnProperty("result")?  json.result : "null";
-       addResult(result);
     })
+    
+    const json = await response.json();
+    const temp = json.hasOwnProperty("result")?  json.result :null;  
+    return temp;
 
 }
 
@@ -40,14 +38,11 @@ export const reseolveInput = (mce: MCE)=>{
     };    
     const factors: string[] = mce.factors.map((factor)=>(factor.factor));
     const mapExtend = getCurrentExtend();
-    const extend = [mapExtend[1],mapExtend[0]].concat(mapExtend.slice(2,4)).join(" ");
-    const testExtent = mapExtend.join(" ");
-
 
     return (
         {
             raster: factors,
-            extend: testExtent,
+            extend: mapExtend,
             weights: weights,
         }
     )

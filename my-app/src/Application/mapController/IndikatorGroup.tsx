@@ -9,6 +9,9 @@ import OlLayerGroup from 'ol/layer/Group';
 import XYZSource from 'ol/source/XYZ';
 import 'ol/ol.css';
 import config from '../../configs/config.json';
+import { useMap } from '@terrestris/react-geo';
+import {getCenter} from 'ol/extent';
+
 
 //Gibt einen ImageLayer zurück der eine ImageWMS Source verwendet, 
 //url und name werden über Paremeter entgegen genommen.
@@ -57,10 +60,13 @@ export const loadResults = (): OlLayerGroup => {
   const resultLayer: ImageLayer<ImageWMS>[] = [];
   if (results) {
     for (let i = 0; i < results.length; i++) {
-      resultLayer.push(getRasterSource(config.Geoserver, results[i]));
+      const newRaster = getRasterSource(config.Geoserver, results[i]);
+      if(i===results.length-1){ 
+        newRaster.setVisible(true);
+      }
+      resultLayer.push(newRaster);
     }
   }
-  console.log(resultLayer);
   const layerGroup = new OlLayerGroup({
     layers: resultLayer
   })
@@ -68,9 +74,7 @@ export const loadResults = (): OlLayerGroup => {
   return layerGroup;
 };
 
-
-
-export const addResult = (name: string):void => {
+export const addResult = (map: OlMap, name: string):void => {
   results.push(name);
   map.setLayers([
     loadBase(),
@@ -178,7 +182,6 @@ const geolocation = new Geolocation({
   },
   projection: map.getView().getProjection(),
 });
-
 
 export const moveToGeolocation = () => {
   geolocation.setTracking(true);

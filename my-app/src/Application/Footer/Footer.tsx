@@ -1,5 +1,4 @@
 import './footer.css';
-import { passMceInput } from '../MCE/passFactors';
 import {
     getCurrentExtend,
     getCurrentLayerName,

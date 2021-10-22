@@ -13,19 +13,13 @@ export function mceHandler(input: MceParams): string {
  
     try {
         const resolved = resolveParams(input);
-        console.log("test1");
         params.raster = resolved.raster;
         params.extend = resolved.extend;
         params.weights = resolved.weights;
-        console.log(params);
-        const output: string = doMCE(params);
-        console.log("test1");
-        console.log(output);       
-
+        const output: string = doMCE(params); 
         postCoveragestore(output);
         postCoverage(output);
-        //updateStyle(output)
-        console.log("MCEHandler: " + output);
+        //updateStyle(output);
         return output;
     } catch (e) {
         throw e;
@@ -38,8 +32,6 @@ export function resolveParams(input: MceParams): MceParams {
         const raster = input.raster;
         const extend = input.extend;
         const weights = input.weights;
-        console.log(typeof(extend[0]))
-        console.log(raster.length)
 
         for(let i = 0; i<raster.length;i++){
             let check = false;
@@ -84,11 +76,11 @@ const test: MceParams={
     "weights": [0.3, 0.6]
 }
 
-
+/*
 try{
     console.log("test");
     const c = mceHandler(test);
     console.log(c);
 } catch (e){
     console.log(e);
-}
+}*/

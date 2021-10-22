@@ -6,8 +6,11 @@ import './../Drawer/drawer.css'
 import { MCE } from '../MCE/mce';
 import { Drawer, Button } from 'antd';
 import {LeftOutlined} from '@ant-design/icons';
-import { Priorisation, PriorisationWrapper } from '../Priorisation/priorisation'
+import { PriorisationWrapper } from '../Priorisation/priorisation';
+import { useMap } from '@terrestris/react-geo';
 import startMce from '../MCE/mce';
+import { addResult } from '../mapController/IndikatorGroup'
+import ZoomToExtent from 'ol/control/ZoomToExtent';
 
 interface AhpDrawerProps {
   visible: boolean;
@@ -17,12 +20,22 @@ interface AhpDrawerProps {
   changeWeight: (name: string, weight: number)=>void
 };
 
+export const showError = () =>{
+  console.log("maybe next time");
+}
+
 export const AhpDrawer = ({ mce, visible, onClose, changeFactor,changeWeight }: AhpDrawerProps) => {
+  const map = useMap();
   const onClick = () =>{
-    startMce(mce);
+    startMce(mce).then((result)=>{
+      if(result && typeof result === 'string') {
+         addResult(map, result);
+        } else {
+          showError();
+        }
+    })
   }
 
-  console.log(mce.factors.length);
     return (
         <Drawer
           title="test"
