@@ -36,11 +36,17 @@ export const Footer = (): JSX.Element => {
 
         map.on('singleclick', function valueListener(event) {            
             const test = map.getLayers();
-            console.log(test);
             const coords = map.getCoordinateFromPixel(event.coordinate);
             const ext = getCurrentExtend();  
             const source = getCurrentLayerSource();
-            if (source) {
+            let prevent = false;
+            map.getInteractions().forEach((i)=>{
+                if(i.get('type')==='draw'){
+                    prevent=true;
+                }
+            })
+            
+            if (source && !prevent) {
                 const url = source.getFeatureInfoUrl(
                     event['coordinate'],
                     getCurrentRes(),

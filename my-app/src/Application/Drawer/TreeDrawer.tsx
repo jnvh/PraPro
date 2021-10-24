@@ -26,11 +26,13 @@ const starting: MCE = {
   factors: [],
 }
 
+
 export const TreeDrawer = (): JSX.Element => {
   const map = useMap();
 
   const [mce, setMce] = useState<MCE>({ factors: [] });
   const [visible, setVisible] = useState<boolean>(false);
+  
 
   const changeFactor = (name: string, change: boolean) => {
     if (change) {

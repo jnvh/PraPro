@@ -1,12 +1,12 @@
-import { getCurrentExtend } from '../mapController/IndikatorGroup';
-
 export interface Factor{
     factor: string,
     weight: number  
 }
 export interface MCE{
-    factors: Factor[]
-}
+    factors: Factor[],
+    extend?: number[],
+    poly?: GeoJSON.Feature<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>
+};
 
 export const startMce = async (mce: MCE) =>{
     const input = reseolveInput(mce);
@@ -37,12 +37,11 @@ export const reseolveInput = (mce: MCE)=>{
         weights = mce.factors.map((factor)=>(factor.weight/sum))
     };    
     const factors: string[] = mce.factors.map((factor)=>(factor.factor));
-    const mapExtend = getCurrentExtend();
 
     return (
         {
             raster: factors,
-            extend: mapExtend,
+            extend: mce.extend,
             weights: weights,
         }
     )
