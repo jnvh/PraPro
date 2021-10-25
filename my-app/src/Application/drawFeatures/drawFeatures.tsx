@@ -44,8 +44,10 @@ export const DrawMode = ({ setType, type, toggle, mce, visible }: DrawModeProps)
     };
 
     const stop = () => {
+        console.log(type)
         switch (type) {
             case 'Rectangle':
+                extent.setActive(false);
                 mce.extend = extent.getExtent();
                 map.removeInteraction(extent);
                 mce.poly = undefined;
@@ -53,7 +55,10 @@ export const DrawMode = ({ setType, type, toggle, mce, visible }: DrawModeProps)
             case 'Polygon':
                 const feature = source.getFeatures().pop();
                 if (feature) {
+                    console.log('has feature');
                     const obj = new GeoJSON().writeFeatureObject(feature);
+                    const test = JSON.stringify(obj);
+                    console.log(test);
                     mce.poly = obj;
                     mce.extend = feature.getGeometry()?.getExtent();
                     map.removeInteraction(drawInter);
@@ -66,9 +71,7 @@ export const DrawMode = ({ setType, type, toggle, mce, visible }: DrawModeProps)
 
     const switchGeom = () => {
         stop();
-        const geom = (type === 'Rectangle') ? 'Polygon' : 'Rectangle';
-        type = geom;
-        setType(geom);
+        type = type === 'Rectangle' ? 'Polygon' : 'Rectangle';
         draw();
     };
 
@@ -88,11 +91,12 @@ export const DrawMode = ({ setType, type, toggle, mce, visible }: DrawModeProps)
     return (
         <div>
             <Dropdown.Button overlay={choices} onClick={draw}>
-                Draw new {type}
+                Draw new shape
             </Dropdown.Button>
             <Button 
             onClick={() => {
                 stop();
+                setType(type);
                 toggle();
             }}>
                 Confirm

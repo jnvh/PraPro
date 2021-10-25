@@ -32,6 +32,10 @@ export function resolveParams(input: MceParams): MceParams {
         const raster = input.raster;
         const extend = input.extend;
         const weights = input.weights;
+        let polygon: any;
+        if(input.hasOwnProperty("polygon")){
+            polygon = input.polygon;
+        }
 
         for(let i = 0; i<raster.length;i++){
             let check = false;
@@ -46,7 +50,7 @@ export function resolveParams(input: MceParams): MceParams {
             if(!check){
                 throw new Error("Ungültiger check");
             };
-        }
+        };
         
 
         let sum = 0;

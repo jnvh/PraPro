@@ -9,13 +9,15 @@ import OlLayerGroup from 'ol/layer/Group';
 import XYZSource from 'ol/source/XYZ';
 import 'ol/ol.css';
 import config from '../../configs/config.json';
-import { useMap } from '@terrestris/react-geo';
-import {getCenter} from 'ol/extent';
+import { Raster as RasterSource, Stamen } from 'ol/source';
+import XYZ from 'ol/source/XYZ';
+import WMTS from 'ol/source/WMTS';
+import TileImage from 'ol/source/TileImage';
 
 
 //Gibt einen ImageLayer zurück der eine ImageWMS Source verwendet, 
 //url und name werden über Paremeter entgegen genommen.
-export const getRasterSource = (url: string, name: string): ImageLayer<ImageWMS> => {
+export const getImageWMS = (url: string, name: string): ImageLayer<ImageWMS> => {
   const raster = new ImageLayer({
     source: new ImageWMS({
       url: url,
@@ -23,11 +25,39 @@ export const getRasterSource = (url: string, name: string): ImageLayer<ImageWMS>
       serverType: 'geoserver',
     }),
     visible: false,
+
   });
   raster.setProperties({ name: name });
   return raster;
 };
 
+export const mceOperation = (): number[] | ImageData => {
+  return [];
+};
+
+export const getRasterSource = () => {
+  const raster = new RasterSource({
+    sources: [
+      new Stamen({
+        layer: 'watercolor',
+      }),
+    ],
+  })
+  const layer = new ImageLayer({
+    source: raster,
+  })
+  return layer; 
+};
+
+
+/*
+export const getRasterLayer = (): ImageLayer<RasterSource> => {
+  const layer = new ImageLayer({
+    source: loadBase()
+  });
+  return layer;
+};
+*/
 //Ladet den BasisLayer als OlLayerTile über die Config und gibt ihn zurück. Verwendet eine XYZ Source
 export const loadBase = () => {
   const basisLayer = new OlLayerTile({
@@ -45,9 +75,9 @@ export const loadBase = () => {
 export const loadIdicators = (): OlLayerGroup => {
   const indicators: ImageLayer<ImageWMS>[] = [];
   for (let i = 0; i < config.LayerNames.length; i++) {
-    indicators.push(getRasterSource(config.Geoserver, config.LayerNames[i]));
+    indicators.push(getImageWMS(config.Geoserver, config.LayerNames[i]));
   }
-  
+
   const layerGroup = new OlLayerGroup({
     layers: indicators
   })
@@ -55,14 +85,15 @@ export const loadIdicators = (): OlLayerGroup => {
   return layerGroup;
 }
 
-const results: string[] =[];
-export const loadResults = (): OlLayerGroup => {
+const results: string[] = [];
+export const loadResults = (factors: string[]): OlLayerGroup => {
   const resultLayer: ImageLayer<ImageWMS>[] = [];
   if (results) {
     for (let i = 0; i < results.length; i++) {
-      const newRaster = getRasterSource(config.Geoserver, results[i]);
-      if(i===results.length-1){ 
+      const newRaster = getImageWMS(config.Geoserver, results[i]);
+      if (i === results.length - 1) {
         newRaster.setVisible(true);
+        newRaster.setProperties({ factors: factors })
       }
       resultLayer.push(newRaster);
     }
@@ -70,16 +101,18 @@ export const loadResults = (): OlLayerGroup => {
   const layerGroup = new OlLayerGroup({
     layers: resultLayer
   })
-  layerGroup.setProperties({ name: "Ergebnisse" });
+  layerGroup.setProperties({
+    name: "Ergebnisse",
+  });
   return layerGroup;
 };
 
-export const addResult = (map: OlMap, name: string):void => {
+export const addResult = (map: OlMap, name: string, factors: string[]): void => {
   results.push(name);
   map.setLayers([
-    loadBase(),
-    loadResults(),
-    loadIdicators(),
+    //loadBase(),
+    loadResults(factors),
+    loadIdicators()
   ])
 }
 
@@ -100,11 +133,11 @@ export const loadOverlayLayer = () => {
 export const map = new OlMap({
   view: new OlView(config.InitialView),
   layers:
-   [
-    loadResults(),
-    loadBase(),
-    loadIdicators(),    
-  ],
+    [
+      loadResults([]),
+      loadBase(),
+      loadIdicators(), 
+    ],
   controls: []
 });
 

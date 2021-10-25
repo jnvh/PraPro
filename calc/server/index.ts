@@ -1,5 +1,6 @@
 import express from 'express';
 import { createRequire } from 'module';
+import getStats, {RasterStats} from '../stats.js';
 const require = createRequire(import.meta.url);
 const config = require('../configs/config.json');
 import mceHandler from '../mceHandler.js';
@@ -29,6 +30,15 @@ export const startServer = () => {
             res.json({status:500});
         }
     });
+
+    app.post('/stats', (req, res) => {
+            const stats = getStats(req.body);
+            if(stats){
+                res.json({ stats: stats})
+            } else {
+                res.json({status:500});
+            };          
+    })
 
     const server = app.listen(port, () => {
         console.log(`Calc listening at http://localhost:${port}`)

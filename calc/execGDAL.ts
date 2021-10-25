@@ -1,6 +1,7 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import { createRequire } from 'module';
+import clip2Polygon from './clip2Polygon.js';
 const require = createRequire(import.meta.url);
 const config = require('./configs/config.json');
 
@@ -15,10 +16,22 @@ interface WarpParams extends gdalParams {
 
 interface CalcParams extends gdalParams {
     weights: number[],
-    outputName?: string
+    outputName?: string,
+    polygon?: GeoJSON
 };
 
-export interface MceParams extends CalcParams, WarpParams { };
+export interface GeoJSON{
+    type: string,
+    geometry:  {
+        type: string,
+        coordinates: number[][]
+    },
+    properties?: {
+        name: string
+    }
+}
+
+export interface MceParams extends CalcParams, WarpParams {};
 
 export function getSmallesPixel(raster: string[]): number {
     let minPix = config.sourcemetadata.maxPix;
@@ -37,6 +50,7 @@ export function getSmallesPixel(raster: string[]): number {
 };
 
 export function execGdalWarp(pixelSize: number, extend: string, raster: string, warpedtemp: string): void {
+
     const outPath = `${warpedtemp}${raster}.tif`;
     const inputPath = `${config.calc.prepared}${raster}.tif`;
     const cmnd = `gdalwarp -t_srs EPSG:3035 -dstnodata 0.0 -tr ${pixelSize} ${pixelSize} -r near -te ${extend} -te_srs 'EPSG:3857' -of GTiff ${inputPath} ${outPath}`;
@@ -62,7 +76,8 @@ export function warpFactors({ raster, extend, warpedtemp }: WarpParams) {
 
 //Führt Muliplikation mit Gewichtung und Addition durch
 //Bsp. Command: gdal.py -A ./layer1.tif -B ./layer2.tif --outfile=./result.tif --calc"((A*weights[0])+(B*weights[1]))";
-export function execCalc({ raster, weights, warpedtemp, outputName }: CalcParams): void {
+export function execCalc({ raster, weights, warpedtemp, outputName, polygon}: CalcParams): void {
+
 
     const rasterPaths: string[] = [];
     for (let i = 0; i < raster.length; i++) {
@@ -79,7 +94,10 @@ export function execCalc({ raster, weights, warpedtemp, outputName }: CalcParams
     };
     calcExpr += ')';
 
-    const outputPath = `${config.calc.mce}${outputName}.tif`
+    let outputPath = `${config.calc.mce}${outputName}.tif`;
+    if(polygon){
+        outputPath = `${warpedtemp}${outputName}.tif`;
+    }
     const cmnd = `gdal_calc.py ${layer} --outfile=${outputPath} --calc="${calcExpr}"`;
 
     try {
@@ -97,12 +115,15 @@ export function doMCE(params: MceParams): string {
     try {
         warpFactors(params);
         execCalc(params);
+        if(params.polygon){
+            clip2Polygon(params)
+        };
     } catch (e) {
         throw e;
     };
 
     try {
-        cleanDir(params.warpedtemp);
+        //cleanDir(params.warpedtemp);
     } catch (e) {
         throw e;
     } finally {

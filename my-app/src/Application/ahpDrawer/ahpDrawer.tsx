@@ -55,7 +55,7 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor, changeWeight }:
     }
     startMce(mce).then((result) => {
       if (result && typeof result === 'string') {
-        addResult(map, result);
+        addResult(map, result, mce.factors.map((factor)=>factor.factor));
       } else {
         showError();
       }

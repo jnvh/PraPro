@@ -1,5 +1,6 @@
 import express from 'express';
 import { createRequire } from 'module';
+import getStats from '../stats.js';
 var require = createRequire(import.meta.url);
 var config = require('../configs/config.json');
 import mceHandler from '../mceHandler.js';
@@ -25,6 +26,16 @@ export var startServer = function () {
         catch (_a) {
             res.json({ status: 500 });
         }
+    });
+    app.post('/stats', function (req, res) {
+        var stats = getStats(req.body);
+        if (stats) {
+            res.json({ stats: stats });
+        }
+        else {
+            res.json({ status: 500 });
+        }
+        ;
     });
     var server = app.listen(port, function () {
         console.log("Calc listening at http://localhost:" + port);

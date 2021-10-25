@@ -29,6 +29,10 @@ export function resolveParams(input) {
         var raster = input.raster;
         var extend = input.extend;
         var weights = input.weights;
+        var polygon = void 0;
+        if (input.hasOwnProperty("polygon")) {
+            polygon = input.polygon;
+        }
         for (var i = 0; i < raster.length; i++) {
             var check = false;
             for (var j = 0; j < config.rasterInputs.length; i++) {
@@ -44,6 +48,7 @@ export function resolveParams(input) {
             }
             ;
         }
+        ;
         var sum = 0;
         for (var i = 0; i < weights.length; i++) {
             sum += weights[i];

@@ -1,6 +1,7 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import { createRequire } from 'module';
+import clip2Polygon from './clip2Polygon.js';
 var require = createRequire(import.meta.url);
 var config = require('./configs/config.json');
 ;
@@ -58,7 +59,7 @@ export function warpFactors(_a) {
 //Führt Muliplikation mit Gewichtung und Addition durch
 //Bsp. Command: gdal.py -A ./layer1.tif -B ./layer2.tif --outfile=./result.tif --calc"((A*weights[0])+(B*weights[1]))";
 export function execCalc(_a) {
-    var raster = _a.raster, weights = _a.weights, warpedtemp = _a.warpedtemp, outputName = _a.outputName;
+    var raster = _a.raster, weights = _a.weights, warpedtemp = _a.warpedtemp, outputName = _a.outputName, polygon = _a.polygon;
     var rasterPaths = [];
     for (var i = 0; i < raster.length; i++) {
         rasterPaths.push("" + warpedtemp + raster[i] + ".tif");
@@ -78,6 +79,9 @@ export function execCalc(_a) {
     ;
     calcExpr += ')';
     var outputPath = "" + config.calc.mce + outputName + ".tif";
+    if (polygon) {
+        outputPath = "" + warpedtemp + outputName + ".tif";
+    }
     var cmnd = "gdal_calc.py " + layer + " --outfile=" + outputPath + " --calc=\"" + calcExpr + "\"";
     try {
         execSync(cmnd, { stdio: ['ignore', process.stdout, 'ignore'] });
@@ -95,13 +99,17 @@ export function doMCE(params) {
     try {
         warpFactors(params);
         execCalc(params);
+        if (params.polygon) {
+            clip2Polygon(params);
+        }
+        ;
     }
     catch (e) {
         throw e;
     }
     ;
     try {
-        cleanDir(params.warpedtemp);
+        //cleanDir(params.warpedtemp);
     }
     catch (e) {
         throw e;
