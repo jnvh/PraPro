@@ -20,15 +20,15 @@
     color: cadetblue;
 }
 .icon{
-    font-size: 30px;
+    font-size: 20px;
     color: antiquewhite;
 }
 .openTreeDrawerButton{
     position: fixed;
     top: 0px;
     left: 0px;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background-color: #182f5e;
     border: #182f5e;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);

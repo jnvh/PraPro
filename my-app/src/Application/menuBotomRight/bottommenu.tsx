@@ -9,7 +9,7 @@ import {
     ArrowsAltOutlined,
     AimOutlined
 } from '@ant-design/icons';
-import { Tooltip } from 'antd';
+import { Button, Space, Tooltip } from 'antd';
 import { useMap } from '@terrestris/react-geo';
 import {
     zoomIn,
@@ -28,16 +28,10 @@ export const BottomMenu = (): JSX.Element | null => {
     const toggleInfo = (): void => {
         setInfo(!showInfo);
     }
-
-    if (true) {
+        /*
         return (
             <div>
                 <Menu className="bottommenu">
-                    <Tooltip placement="left" title={'Zeige Info zum Layer'}>
-                        <Menu.Item onClick={toggleInfo}
-                            icon={<InfoOutlined />}>
-                        </Menu.Item>
-                    </Tooltip>
                     <Tooltip placement="left" title={'Zoom in'}>
                         <Menu.Item onClick={zoomIn}
                             icon={<PlusOutlined />}>
@@ -53,22 +47,30 @@ export const BottomMenu = (): JSX.Element | null => {
                             icon={<ArrowsAltOutlined />}>
                         </Menu.Item>
                     </Tooltip>
-                    <Tooltip placement="left" title={'Zoome zum aktuellen Standort'}>
-                        <Menu.Item onClick={moveToGeolocation}
-                            icon={<AimOutlined />}>
-                        </Menu.Item>
-                    </Tooltip>
-                    <Tooltip placement="left" title={'test'}>
-                        <Menu.Item>tst</Menu.Item>
-                    </Tooltip>
                 </Menu>
                 <Infobox
                     visible={showInfo} />
             </div>
 
         );
-    }
-    return null;
+        */
+
+        return (
+            <div className={'bottommenu'}>
+            <Space direction="vertical" size={3}>
+                <Tooltip placement="left" title={'Zoom in'}>
+                    <Button onClick={zoomIn} icon={<PlusOutlined /> } className={'controlButton'} />
+                </Tooltip>
+                <Tooltip placement="left" title={'Zoom out'}>
+                    <Button onClick={zoomOut} icon={<MinusOutlined />} className={'controlButton'} />
+                </Tooltip>
+                <Tooltip placement="left" title={'Reset Zoom'}>
+                    <Button onClick={resetZoom} icon={<ArrowsAltOutlined />} className={'controlButton'} />
+                </Tooltip>
+            </Space>
+            </div>
+
+        )
 };
 
 export default BottomMenu;

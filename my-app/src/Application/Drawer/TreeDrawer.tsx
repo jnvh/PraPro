@@ -13,6 +13,7 @@ import { RightSquareOutlined, LeftOutlined } from '@ant-design/icons';
 import { useMap } from '@terrestris/react-geo';
 import { Tree } from './Tree';
 import { AhpDrawer } from '../ahpDrawer/ahpDrawer';
+import { List } from 'react-bootstrap-icons';
 
 export interface Factor {
   factor: string,
@@ -82,11 +83,12 @@ export const TreeDrawer = (): JSX.Element => {
 
   return (
     <div className="App">
-      <Tooltip placement="bottomRight" title={'Open Drawer'}>
+      <Tooltip placement="bottomRight" title={'Open Drawer'} >
         <Button
           className={"openTreeDrawerButton"}
           onClick={toggleDrawer}
-          icon={<RightSquareOutlined className={'icon'} />}
+          icon={<List className={'icon'} />}
+          shape='circle'
         />
       </Tooltip>
 

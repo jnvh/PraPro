@@ -13,6 +13,8 @@ import { addResult, getCurrentExtend } from '../mapController/IndikatorGroup'
 import DrawButton from '../drawFeatures/drawButton';
 import { useState } from 'react';
 import { DrawMode } from '../drawFeatures/drawFeatures'
+import { LayersFill } from 'react-bootstrap-icons';
+
 
 interface AhpDrawerProps {
   visible: boolean;

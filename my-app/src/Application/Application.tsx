@@ -6,6 +6,8 @@ import map from './mapController/IndikatorGroup';
 import { BottomMenu } from './menuBotomRight/bottommenu';
 import {ScaleCombo} from '@terrestris/react-geo/';
 import { SearchBar } from './nominatedSearch/searchbar';
+import { TopRight } from './menuTopRight.tsx/topRight';
+import TopMenu from './topMenu/topMenu';
 
 
 //ReactGeo
@@ -23,12 +25,14 @@ export function Application(): JSX.Element {
                 <MapComponent
                     map={map}
                 />
+                <TopRight/>
+                <TopMenu/>
                 <TreeDrawer />
                 <Footer />
                 <BottomMenu/>
             </MapContext.Provider>
+
             <ScaleCombo map={map} className = 'scale' />
-            <SearchBar map={map}/>
         </div>
     );
 };

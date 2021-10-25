@@ -1,13 +1,13 @@
-.bottommenu{
+.topMenu{
     position: fixed;
-    bottom: 80px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
-};
+}
 
-.controlButton{
-    width: 15px;
-    height:  15px;
-    padding: 5px;
+.topButton{
+    width: 30px;
+    height:  30px;
+    color: brown;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.24);
 }

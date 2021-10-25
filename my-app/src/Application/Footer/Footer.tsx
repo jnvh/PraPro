@@ -8,6 +8,7 @@ import {
 import {
     useMap
 } from '@terrestris/react-geo';
+import {toLonLat} from 'ol/proj';
 
 import { useState, useEffect } from 'react';
 import  config  from '../../configs/config.json';
@@ -31,7 +32,10 @@ export const Footer = (): JSX.Element => {
 
         map.on('pointermove', function event(e) {
             const coords = map.getCoordinateFromPixel(e.coordinate);
-            setCoords("lon " + coords[0].toFixed(4) + ", lat " + coords[1].toFixed(4));
+            const lonlat = map.getCoordinateFromPixelInternal(e.coordinate);
+            console.log(lonlat);
+            console.log(toLonLat(lonlat))
+            setCoords(coords[0].toFixed(2) + " : " + coords[1].toFixed(2));
         });
 
         map.on('singleclick', function valueListener(event) {            
