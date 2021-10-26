@@ -33,8 +33,6 @@ export const Footer = (): JSX.Element => {
         map.on('pointermove', function event(e) {
             const coords = map.getCoordinateFromPixel(e.coordinate);
             const lonlat = map.getCoordinateFromPixelInternal(e.coordinate);
-            console.log(lonlat);
-            console.log(toLonLat(lonlat))
             setCoords(coords[0].toFixed(2) + " : " + coords[1].toFixed(2));
         });
 

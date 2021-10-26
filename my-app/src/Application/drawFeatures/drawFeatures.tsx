@@ -50,7 +50,6 @@ export const DrawMode = ({ setType, type, toggle, mce, visible }: DrawModeProps)
                 extent.setActive(false);
                 mce.extend = extent.getExtent();
                 map.removeInteraction(extent);
-                mce.poly = undefined;
                 break;
             case 'Polygon':
                 const feature = source.getFeatures().pop();
@@ -59,7 +58,6 @@ export const DrawMode = ({ setType, type, toggle, mce, visible }: DrawModeProps)
                     const obj = new GeoJSON().writeFeatureObject(feature);
                     const test = JSON.stringify(obj);
                     console.log(test);
-                    mce.poly = obj;
                     mce.extend = feature.getGeometry()?.getExtent();
                     map.removeInteraction(drawInter);
                     source.clear();
@@ -90,9 +88,9 @@ export const DrawMode = ({ setType, type, toggle, mce, visible }: DrawModeProps)
 
     return (
         <div>
-            <Dropdown.Button overlay={choices} onClick={draw}>
-                Draw new shape
-            </Dropdown.Button>
+            <Button onClick={draw}>
+                Draw new extend
+            </Button>
             <Button 
             onClick={() => {
                 stop();

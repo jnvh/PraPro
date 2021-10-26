@@ -1,0 +1,29 @@
+
+{
+    "geoserver": {
+        "url": "http://geoserver:8080/geoserver/",
+        "user": "admin",
+        "password": "geoserver",
+        "factorws": "prapro",
+        "resultws": "prapro",
+        "resultstyle": "vulnerability"
+    },
+    "express": {
+        "port": 5050
+    },
+    "calc":{
+        "prepared":"/geoserverdata/praproSource/sourceprepared/",
+        "warped":"/geoserverdata/praproSource/temp/warped/",
+        "mce":"/geoserverdata/praproSource/mce/"
+    },
+    "sourcemetadata":{
+        "maxPix": 8000,
+        "minPix": 10
+    },
+    "rasterInputs":[
+        "Populationsdichte", 
+        "Aelter als 65",
+        "Versigelungsgrad",
+        "Hitzewellen"
+    ]
+  }

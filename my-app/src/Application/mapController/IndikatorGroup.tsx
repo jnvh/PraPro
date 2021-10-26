@@ -110,7 +110,7 @@ export const loadResults = (factors: string[]): OlLayerGroup => {
 export const addResult = (map: OlMap, name: string, factors: string[]): void => {
   results.push(name);
   map.setLayers([
-    //loadBase(),
+    loadBase(),
     loadResults(factors),
     loadIdicators()
   ])

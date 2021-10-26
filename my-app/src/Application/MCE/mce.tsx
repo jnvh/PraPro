@@ -4,8 +4,7 @@ export interface Factor{
 }
 export interface MCE{
     factors: Factor[],
-    extend?: number[],
-    poly?: GeoJSON.Feature<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>
+    extend?: number[]
 };
 
 export const startMce = async (mce: MCE) =>{

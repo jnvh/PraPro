@@ -53,7 +53,6 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor, changeWeight }:
   const onClick = () => {
     if(mce.extend===undefined || type==='View'){
       mce.extend=getCurrentExtend();
-      mce.poly=undefined;
     }
     startMce(mce).then((result) => {
       if (result && typeof result === 'string') {

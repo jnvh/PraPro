@@ -16,8 +16,8 @@ services:
     environment:
       EXTRA_JAVA_OPTS: -Xms1g -Xmx2g
     volumes:
-      - ./geoserver/geoserver_data:/opt/geoserver_data/:Z
-      - ./geoserver/additional_libs:/opt/additional_libs/:Z
+      - ./geoserver/geoserver_data:/opt/geoserver_data/:z
+      - ./geoserver/additional_libs:/opt/additional_libs/:z
     depends_on:
       - postgis
   nginx:
@@ -28,3 +28,15 @@ services:
       - 80:80
     depends_on:
       - geoserver
+  calc: 
+    image: calc:latest
+    volumes:
+      - ./calc:/calc:z
+      - ./geoserver/geoserver_data:/geoserverdata:z
+    ports: 
+      - 5050:5050
+    build: 
+      context: ./
+volumes: 
+  geoserverdata:
+    driver: local
