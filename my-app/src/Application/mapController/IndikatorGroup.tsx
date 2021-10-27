@@ -13,6 +13,7 @@ import { Raster as RasterSource, Stamen } from 'ol/source';
 import XYZ from 'ol/source/XYZ';
 import WMTS from 'ol/source/WMTS';
 import TileImage from 'ol/source/TileImage';
+import { MCE } from '../MCE/mce';
 
 
 //Gibt einen ImageLayer zurück der eine ImageWMS Source verwendet, 
@@ -86,14 +87,14 @@ export const loadIdicators = (): OlLayerGroup => {
 }
 
 const results: string[] = [];
-export const loadResults = (factors: string[]): OlLayerGroup => {
+export const loadResults = (factors?: MCE): OlLayerGroup => {
   const resultLayer: ImageLayer<ImageWMS>[] = [];
   if (results) {
     for (let i = 0; i < results.length; i++) {
       const newRaster = getImageWMS(config.Geoserver, results[i]);
       if (i === results.length - 1) {
         newRaster.setVisible(true);
-        newRaster.setProperties({ factors: factors })
+        newRaster.setProperties({ mce: factors })
       }
       resultLayer.push(newRaster);
     }
@@ -107,7 +108,7 @@ export const loadResults = (factors: string[]): OlLayerGroup => {
   return layerGroup;
 };
 
-export const addResult = (map: OlMap, name: string, factors: string[]): void => {
+export const addResult = (map: OlMap, name: string, factors: MCE): void => {
   results.push(name);
   map.setLayers([
     loadBase(),
@@ -131,10 +132,11 @@ export const loadOverlayLayer = () => {
 
 //Erstellt die map und füght BasisLayer, Indikatoren und Overlaylayer hinzu, der View wird in der Config definiert
 export const map = new OlMap({
+
   view: new OlView(config.InitialView),
   layers:
     [
-      loadResults([]),
+      loadResults(),
       loadBase(),
       loadIdicators(), 
     ],
@@ -148,6 +150,16 @@ export const getCurrentLayerName = (): string => {
   for (let i = layers.length - 2; i > 0; i--) {
     if (layers[i].getVisible()) {
       return layers[i].getProperties().name;
+    };
+  };
+  return "";
+};
+
+export const getCurrentLayerMce = () => {
+  const layers = map.getLayerGroup().getLayersArray();
+  for (let i = layers.length - 2; i > 0; i--) {
+    if (layers[i].getVisible()) {
+      return layers[i].getProperties().mce;
     };
   };
   return "";

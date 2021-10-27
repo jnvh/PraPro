@@ -22,9 +22,9 @@ export const startServer = () => {
     });
 
     //Empfange die Factoren & Extend
-    app.post('/mce', (req, res) => {
+    app.post('/mce', async (req, res) => {
         try {
-            const result = mceHandler(req.body);
+            const result = await mceHandler(req.body);
             res.json({ result: result });
         } catch (e) {
             res.json({status:e});
@@ -32,7 +32,7 @@ export const startServer = () => {
     });
 
     app.post('/stats', (req, res) => {
-            const stats = getStats(req.body);
+            const stats = req.body.hasOwnProperty('raster') ? getStats(req.body.raster) : undefined;
             if(stats){
                 res.json({ stats: stats})
             } else {

@@ -1,4 +1,6 @@
 import './footer.css';
+import { LayerPanel } from '../currentLayerPanel/LayerPanel';
+
 import {
     getCurrentExtend,
     getCurrentLayerName,
@@ -25,14 +27,10 @@ export const Footer = (): JSX.Element => {
         map.on('change', function event() {
             setTopLayer(getCurrentLayerName());
             setValue("");
-            const j = {
-                test: getCurrentLayerName()
-            };
         });
 
         map.on('pointermove', function event(e) {
             const coords = map.getCoordinateFromPixel(e.coordinate);
-            const lonlat = map.getCoordinateFromPixelInternal(e.coordinate);
             setCoords(coords[0].toFixed(2) + " : " + coords[1].toFixed(2));
         });
 
@@ -41,14 +39,8 @@ export const Footer = (): JSX.Element => {
             const coords = map.getCoordinateFromPixel(event.coordinate);
             const ext = getCurrentExtend();  
             const source = getCurrentLayerSource();
-            let prevent = false;
-            map.getInteractions().forEach((i)=>{
-                if(i.get('type')==='draw'){
-                    prevent=true;
-                }
-            })
-            
-            if (source && !prevent) {
+
+            if (source) {
                 const url = source.getFeatureInfoUrl(
                     event['coordinate'],
                     getCurrentRes(),
@@ -77,9 +69,10 @@ export const Footer = (): JSX.Element => {
 
     return (
         <div>
+            <LayerPanel layer={topLayer} />            
             <div className="wrapper" />
             <div className="footer" style={{backgroundColor: config.style.maincolor}} >
-                {data + value}
+                {topLayer + value}
                 <br />
                 {coords}
             </div>           

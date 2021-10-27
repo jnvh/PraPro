@@ -5,6 +5,7 @@
   "proxy": "http://localhost:5050",
   "dependencies": {
     "@ant-design/icons": "^4.6.4",
+    "@data-ui/histogram": "^0.0.84",
     "@terrestris/react-geo": "^15.2.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",

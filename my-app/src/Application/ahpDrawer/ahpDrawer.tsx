@@ -4,7 +4,7 @@ import 'ol/ol.css';
 import 'antd/dist/antd.css';
 import './../Drawer/drawer.css'
 import { MCE } from '../MCE/mce';
-import { Drawer, Button } from 'antd';
+import { Drawer, Button, Space } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import { PriorisationWrapper } from '../Priorisation/priorisation';
 import { useMap } from '@terrestris/react-geo';
@@ -13,8 +13,6 @@ import { addResult, getCurrentExtend } from '../mapController/IndikatorGroup'
 import DrawButton from '../drawFeatures/drawButton';
 import { useState } from 'react';
 import { DrawMode } from '../drawFeatures/drawFeatures'
-import { LayersFill } from 'react-bootstrap-icons';
-
 
 interface AhpDrawerProps {
   visible: boolean;
@@ -49,14 +47,15 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor, changeWeight }:
   }
   const pickType = (type: string) => {
     setType(type);
-  };  
+  };
   const onClick = () => {
-    if(mce.extend===undefined || type==='View'){
-      mce.extend=getCurrentExtend();
+    if (mce.extend === undefined || type === 'View') {
+      mce.extend = getCurrentExtend();
     }
+
     startMce(mce).then((result) => {
       if (result && typeof result === 'string') {
-        addResult(map, result, mce.factors.map((factor)=>factor.factor));
+        addResult(map, result, mce);
       } else {
         showError();
       }
@@ -66,7 +65,7 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor, changeWeight }:
   const toggleDrawMode = () => {
     onClose();
     setDrawMode(!drawMode);
-    if(mce.extend){
+    if (mce.extend) {
       refreshMemory(type, mce.extend);
     }
   };
@@ -74,7 +73,7 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor, changeWeight }:
   return (
     <div>
       <Drawer
-        title="test"
+        title="Multi Criteria Evaluation"
         placement="left"
         visible={visible}
         mask={false}
@@ -84,13 +83,14 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor, changeWeight }:
         getContainer={false}
         closeIcon={<LeftOutlined />}
       >
+
         <div style={{ height: "100px" }}>
           Hier steht was furchtbar intformatives
           <br />
           <Button
             type="text"
             className="startButton">
-            Öffne Erklärung
+              Open epxplenation
           </Button>
         </div>
         <PriorisationWrapper
@@ -98,18 +98,21 @@ export const AhpDrawer = ({ mce, visible, onClose, changeFactor, changeWeight }:
           changeFactor={changeFactor}
           changeWeight={changeWeight}
         />
-
-        <DrawButton setType={pickType} toggle={toggleDrawMode} type={type} />
-
-        <Button onClick={onClick} >
-          Starte die Berechnung
-        </Button>
+                <Space direction='horizontal' size={10}>
+          <Space direction='vertical' size={20}>
+        
+            <DrawButton setType={pickType} toggle={toggleDrawMode} type={type} />
+            <Button onClick={onClick} >
+              Start evaluation
+            </Button>
+          </Space>
+        </Space>
       </Drawer>
       <DrawMode
         mce={mce}
         type={type}
         toggle={toggleDrawMode}
-        setType={pickType}        
+        setType={pickType}
         visible={drawMode} />
 
     </div>

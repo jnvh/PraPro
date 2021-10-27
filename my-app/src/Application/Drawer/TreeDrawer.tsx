@@ -9,7 +9,7 @@ import {
   Tooltip,
   Button,
 } from 'antd';
-import { RightSquareOutlined, LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined } from '@ant-design/icons';
 import { useMap } from '@terrestris/react-geo';
 import { Tree } from './Tree';
 import { AhpDrawer } from '../ahpDrawer/ahpDrawer';

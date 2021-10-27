@@ -7,7 +7,7 @@ export interface RasterStats {
     min: number,
     max: number,
     mean: number,
-    histData?: number[]
+    histData?: Hist
 };
 
 interface Hist extends RasterStats {
@@ -21,24 +21,22 @@ export function getStats(rasterName: string): RasterStats | undefined {
     const infoData = JSON.parse(ifnoExec.toString());
     if (infoData.hasOwnProperty('bands') && Array.isArray(infoData.bands)) {
         const stats = infoData.bands.pop();
-        const min = stats.hasOwnProperty('min') ? infoData.min : undefined;
-        const max = stats.hasOwnProperty('max') ? infoData.max : undefined;
-        const mean = stats.hasOwnProperty('mean') ? infoData.mean : undefined;
-        const hist: Hist = stats.hasOwnProperty('histogram') ? infoData.histogram : undefined;
+        const min = stats.hasOwnProperty('min') ? stats.min : undefined;
+        const max = stats.hasOwnProperty('max') ? stats.max : undefined;
+        const mean = stats.hasOwnProperty('mean') ? stats.mean : undefined;
+        const hist: Hist = stats.hasOwnProperty('histogram') ? stats.histogram : undefined;
         if (min && max && mean && hist) {
             return ({
                 min: min,
                 max: max,
                 mean: mean,
-                histData: computeHist(hist)
+                histData: hist
             });
         };
     };
     return undefined;
 };
 
-export function computeHist(hist: Hist) {
-    return hist.buckets;
-}
+
 
 export default getStats;

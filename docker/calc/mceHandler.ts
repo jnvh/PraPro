@@ -4,7 +4,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const config = require('./configs/config.json');
 
-export function mceHandler(input: MceParams): string | null{
+export async function  mceHandler(input: MceParams){
     const params: MceParams = {
         raster: [],
         extend: [],
@@ -17,8 +17,8 @@ export function mceHandler(input: MceParams): string | null{
         params.extend = resolved.extend;
         params.weights = resolved.weights;
         const output: string = doMCE(params); 
-        postCoveragestore(output);
-        postCoverage(output);
+        await postCoveragestore(output);
+        await postCoverage(output);
         //updateStyle(output);
         return output;
     } catch (e) {

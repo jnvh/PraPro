@@ -8,8 +8,7 @@
         "Populationsdichte", 
         "Aelterals65",
         "Versigelungsgrad",
-        "Hitzewellen",
-        "MCE1634733820858"
+        "Hitzewellen"
     ],
     "OverlayLayer": {
         "url": "http://localhost/geoserver/prapro/wms?",

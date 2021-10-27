@@ -8,7 +8,7 @@ import {ScaleCombo} from '@terrestris/react-geo/';
 import { SearchBar } from './nominatedSearch/searchbar';
 import { TopRight } from './menuTopRight.tsx/topRight';
 import TopMenu from './topMenu/topMenu';
-
+import { LayerPanel } from './currentLayerPanel/LayerPanel';
 
 //ReactGeo
 import {

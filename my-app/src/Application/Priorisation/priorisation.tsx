@@ -53,7 +53,7 @@ export const PriorisationWrapper = ({ mce, changeFactor, changeWeight }: Prioris
 }
 
 export const Priorisation = ({ factor, weight, changeFactor, changeWeight }: PrioProps): JSX.Element => {
-    const [value, setValue] = useState<number>(5);
+    const [value, setValue] = useState<number>(0);
 
     const onChange = (change: number) => {
         setValue(change);

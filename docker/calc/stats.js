@@ -9,16 +9,16 @@ export function getStats(rasterName) {
     var infoData = JSON.parse(ifnoExec.toString());
     if (infoData.hasOwnProperty('bands') && Array.isArray(infoData.bands)) {
         var stats = infoData.bands.pop();
-        var min = stats.hasOwnProperty('min') ? infoData.min : undefined;
-        var max = stats.hasOwnProperty('max') ? infoData.max : undefined;
-        var mean = stats.hasOwnProperty('mean') ? infoData.mean : undefined;
-        var hist = stats.hasOwnProperty('histogram') ? infoData.histogram : undefined;
+        var min = stats.hasOwnProperty('min') ? stats.min : undefined;
+        var max = stats.hasOwnProperty('max') ? stats.max : undefined;
+        var mean = stats.hasOwnProperty('mean') ? stats.mean : undefined;
+        var hist = stats.hasOwnProperty('histogram') ? stats.histogram : undefined;
         if (min && max && mean && hist) {
             return ({
                 min: min,
                 max: max,
                 mean: mean,
-                histData: computeHist(hist)
+                histData: hist
             });
         }
         ;
@@ -27,7 +27,4 @@ export function getStats(rasterName) {
     return undefined;
 }
 ;
-export function computeHist(hist) {
-    return hist.buckets;
-}
 export default getStats;

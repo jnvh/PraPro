@@ -10,6 +10,7 @@ export interface MCE{
 export const startMce = async (mce: MCE) =>{
     const input = reseolveInput(mce);
     //const result: string[] = [];
+    console.log(input);
     
     const response = await fetch('mce', {
         method: 'POST',
