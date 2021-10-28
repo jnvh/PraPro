@@ -9,16 +9,19 @@ export interface TreeProps {
   map: OlMap,
   layerGroup: OlLayerGroup,
   onClick: (name:string, change: boolean)=>void,
+  setTop: ()=>void
 };
 
 export const Tree = (props: TreeProps): JSX.Element => {
+
+  console.log('trr');
 
  return (
  <LayerTree
         map={props.map}
         layerGroup={props.layerGroup}
         filterFunction={(layer) => layer.get("name") != "Basislayer"}
-        nodeTitleRenderer={(layer) => <LayerNode layer={layer} onClick={props.onClick} />}
+        nodeTitleRenderer={(layer) => <LayerNode layer={layer} onClick={props.onClick} setTop={props.setTop} />}
       />)
 };
 

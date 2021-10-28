@@ -3,7 +3,8 @@ import 'antd/dist/antd.css';
 import 'ol/ol.css';
 import 'antd/dist/antd.css';
 import './drawer.css'
-import React, { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import {
   Drawer,
   Tooltip,
@@ -14,6 +15,7 @@ import { useMap } from '@terrestris/react-geo';
 import { Tree } from './Tree';
 import { AhpDrawer } from '../ahpDrawer/ahpDrawer';
 import { List } from 'react-bootstrap-icons';
+import { getCurrentLayerName } from '../mapController/IndikatorGroup';
 
 export interface Factor {
   factor: string,
@@ -30,9 +32,11 @@ const starting: MCE = {
 
 export const TreeDrawer = (): JSX.Element => {
   const map = useMap();
-
+  const [topLayer, setTopLayer] = useState<string>("");
   const [mce, setMce] = useState<MCE>({ factors: [] });
   const [visible, setVisible] = useState<boolean>(false);
+
+  const setTop = () => (setTopLayer(getCurrentLayerName()));
   
 
   const changeFactor = (name: string, change: boolean) => {
@@ -103,7 +107,7 @@ export const TreeDrawer = (): JSX.Element => {
         closeIcon={<LeftOutlined />}
       >
         <div style={{height: "100px"}}>
-        Hier steht was furchtbar intformatives
+          {topLayer}
         <br/>
         <Button
           type="text"
@@ -122,6 +126,7 @@ export const TreeDrawer = (): JSX.Element => {
           map={map}
           layerGroup={map.getLayerGroup()}
           onClick={changeFactor}
+          setTop={setTop}
         />
       </Drawer>
       <div className="drawerWrapper">

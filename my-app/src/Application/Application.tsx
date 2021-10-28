@@ -31,7 +31,7 @@ export function Application(): JSX.Element {
                 <Footer />
                 <BottomMenu/>
             </MapContext.Provider>
-
+            
             <ScaleCombo map={map} className = 'scale' />
         </div>
     );

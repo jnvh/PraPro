@@ -5,13 +5,15 @@ import config from '../../configs/config.json';
 import { LayerTransparencySlider } from '@terrestris/react-geo'
 interface LayerNodeProps {
     layer: BaseLayer,
-    onClick: (name: string, change: boolean) => void
+    onClick: (name: string, change: boolean) => void,
+    setTop: ()=>void
 }
 interface LayerSliderProps {
     layer: BaseLayer,
     visible: boolean
 }
-export const LayerNode = ({ layer, onClick }: LayerNodeProps): JSX.Element => {
+export const LayerNode = ({ setTop, layer, onClick }: LayerNodeProps): JSX.Element => {
+    setTop();
 
     const [checked, setChecked] = useState<boolean>(false);
     const name = layer.get("name");
