@@ -7,7 +7,8 @@ export interface MCE{
     extend?: number[]
 };
 
-export const startMce = async (mce: MCE) =>{
+export const startMce = async (mce: MCE, feedback?: ()=>void) =>{
+    if(feedback){feedback()};
     const input = reseolveInput(mce);
     //const result: string[] = [];
     console.log(input);

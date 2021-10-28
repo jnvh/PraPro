@@ -1,9 +1,8 @@
 import './topRight.css';
 import { ClipboardData, Download, GeoAltFill, GeoFill, Hexagon, Rulers } from 'react-bootstrap-icons';
 import { StatCard } from '../statCard/statCard';
-
-import { Button, Space, Tooltip } from 'antd';
-import { useMap } from '@terrestris/react-geo';
+import ExportMenu from '../export/export';
+import { Button, Space, Tooltip, Dropdown } from 'antd';
 import {
     moveToGeolocation
 }
@@ -13,9 +12,9 @@ import { useState } from 'react';
 export const TopRight = (): JSX.Element => {
 
     const [showStats, setStats]=useState<boolean>(false);
-    function toggleStatCard() {
-        setStats(!showStats);        
-    }
+    const [showExport, setExport]=useState<boolean>(false);
+    function toggleStatCard() { setStats(!showStats) };
+    function toggleExportMenu() { setExport(!showExport) };
 
     return (
         <>
@@ -24,8 +23,10 @@ export const TopRight = (): JSX.Element => {
                 <Tooltip placement="left" title={'Draw Shape'}>
                     <Button icon={<Hexagon />} className={'controlButtonRight'} />
                 </Tooltip>
-                <Tooltip placement="left" title={'Export'}>
-                    <Button icon={<Download />} className={'controlButtonRight'} />
+                <Tooltip placement="left" title={'Export'} >
+                    <Dropdown overlay={ExportMenu} placement="bottomCenter">
+                    <Button icon={<Download />} className={'controlButtonRight'} onClick={toggleExportMenu}/>
+                    </Dropdown>
                 </Tooltip>
                 <Tooltip placement="left" title={'Export'}>
                     <Button icon={<Rulers />} className={'controlButtonRight'} />

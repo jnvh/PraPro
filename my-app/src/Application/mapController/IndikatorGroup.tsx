@@ -11,10 +11,18 @@ import 'ol/ol.css';
 import config from '../../configs/config.json';
 import { Raster as RasterSource, Stamen } from 'ol/source';
 import XYZ from 'ol/source/XYZ';
-import WMTS from 'ol/source/WMTS';
+
 import TileImage from 'ol/source/TileImage';
 import { MCE } from '../MCE/mce';
-
+import TileWMS from 'ol/source/TileWMS';
+import 'ol/ol.css';
+import Map from 'ol/Map';
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
+import View from 'ol/View';
+import WMTS, { optionsFromCapabilities } from 'ol/source/WMTS';
+import WMTSCapabilities from 'ol/format/WMTSCapabilities';
+import { response } from 'express';
 
 //Gibt einen ImageLayer zurück der eine ImageWMS Source verwendet, 
 //url und name werden über Paremeter entgegen genommen.
@@ -37,20 +45,59 @@ export const mceOperation = (): number[] | ImageData => {
 };
 
 export const getRasterSource = () => {
+  const test = "http://localhost:8080/geoserver/gwc/service/tms/1.0.0/prapro%3AHitzewellen@EPSG%3A4326@jpeg/{z}/{x}/{-y}.jpg";
+
   const raster = new RasterSource({
     sources: [
-      new Stamen({
-        layer: 'watercolor',
-      }),
+      getImageWMS(config.Geoserver, 'Hitzewellen')
     ],
+    operation: (pixel, data) => {
+      return pixel[0];
+    }
   })
-  const layer = new ImageLayer({
-    source: raster,
+
+  return new ImageLayer({
+    source: raster
   })
-  return layer; 
 };
 
+const testTMS = () => {
+  const url = "http://localhost:8080/geoserver/gwc/service/tms/1.0.0/prapro%3APopulationsdichte@EPSG%3A4326@png/{z}/{x}/{-y}.jpg";
+  const basisLayer = new OlLayerTile({
+    source: new XYZSource({
+      url: url
+    })
+  })
+  return basisLayer;
+};
 
+const testWMTS = () => {
+  const parser = new WMTSCapabilities();
+
+  fetch('http://localhost:8080/geoserver/gwc/service/wmts?REQUEST=GetCapabilities')
+    .then(function (response) {
+      console.log(response);
+      return response.text();
+    }).then(function (text) {
+      const result = parser.read(text);
+      const options = optionsFromCapabilities(result, {
+        layer: 'Hitzewellen',
+        matrixSet: 'EPSG:4326',
+      });
+      if (options){
+        const test =  new TileLayer({
+            opacity: 1,
+            source: new WMTS(options)
+          })
+        console.log(test);
+        }
+    }).catch((res) => {
+      console.log(res)
+    }
+    )
+
+}
+testWMTS();
 /*
 export const getRasterLayer = (): ImageLayer<RasterSource> => {
   const layer = new ImageLayer({
@@ -130,7 +177,7 @@ export const loadOverlayLayer = () => {
   return overlayLayer;
 }
 
-//Erstellt die map und füght BasisLayer, Indikatoren und Overlaylayer hinzu, der View wird in der Config definiert
+
 export const map = new OlMap({
 
   view: new OlView(config.InitialView),
@@ -142,6 +189,9 @@ export const map = new OlMap({
     ],
   controls: []
 });
+
+//Erstellt die map und füght BasisLayer, Indikatoren und Overlaylayer hinzu, der View wird in der Config definiert
+
 
 //gibt den Namen des Indikators zurück der aktuell angezeigt wird, ignoriert Basis- und Overlaylayer
 //Gibt "" zurück wenn keiner visible ist

@@ -68,8 +68,7 @@ export const Footer = (): JSX.Element => {
     }, [map]);
 
     return (
-        <div>
-            <LayerPanel layer={topLayer} />            
+        <div>         
             <div className="wrapper" />
             <div className="footer" style={{backgroundColor: config.style.maincolor}} >
                 {topLayer + value}

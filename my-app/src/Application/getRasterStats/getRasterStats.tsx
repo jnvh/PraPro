@@ -2,8 +2,13 @@ export interface RasterStats {
     min: number,
     max: number,
     mean: number,
-    histData?: number[]
+    histData?: Hist
 };
+
+export interface Hist extends RasterStats {
+    count: number,
+    buckets: number[],
+}
 
 export async function getRasterStats(raster: string) {
     const response = await fetch('stats', {
