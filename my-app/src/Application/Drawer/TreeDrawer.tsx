@@ -36,8 +36,7 @@ export const TreeDrawer = (): JSX.Element => {
   const [mce, setMce] = useState<MCE>({ factors: [] });
   const [visible, setVisible] = useState<boolean>(false);
 
-  const setTop = () => (setTopLayer(getCurrentLayerName()));
-  
+  const setTop = () => (setTopLayer(getCurrentLayerName()));  
 
   const changeFactor = (name: string, change: boolean) => {
     if (change) {

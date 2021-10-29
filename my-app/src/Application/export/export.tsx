@@ -29,7 +29,7 @@ export function getWCS() {
 }
 
 export function downloadPNG() {
-
+    
 }
 
 export default ExportMenu;

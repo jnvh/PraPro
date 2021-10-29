@@ -21,8 +21,7 @@ export const LayerPanel = ({layer}:PanelProps):JSX.Element => {
     }
     const mce = getCurrentLayerMce();
 
-    const info = mce ? (<div>
-        
+    const info = mce ? (<div>       
     </div>) : (<div></div>);
 
   

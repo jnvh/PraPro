@@ -23,6 +23,7 @@ import View from 'ol/View';
 import WMTS, { optionsFromCapabilities } from 'ol/source/WMTS';
 import WMTSCapabilities from 'ol/format/WMTSCapabilities';
 import { response } from 'express';
+import BaseLayer from 'ol/layer/Base';
 
 //Gibt einen ImageLayer zurück der eine ImageWMS Source verwendet, 
 //url und name werden über Paremeter entgegen genommen.
@@ -84,13 +85,13 @@ const testWMTS = () => {
         layer: 'Hitzewellen',
         matrixSet: 'EPSG:4326',
       });
-      if (options){
-        const test =  new TileLayer({
-            opacity: 1,
-            source: new WMTS(options)
-          })
+      if (options) {
+        const test = new TileLayer({
+          opacity: 1,
+          source: new WMTS(options)
+        })
         console.log(test);
-        }
+      }
     }).catch((res) => {
       console.log(res)
     }
@@ -185,7 +186,7 @@ export const map = new OlMap({
     [
       loadResults(),
       loadBase(),
-      loadIdicators(), 
+      loadIdicators(),
     ],
   controls: []
 });
@@ -215,17 +216,49 @@ export const getCurrentLayerMce = () => {
   return "";
 };
 
+export const getCurrentLayer = (): null | BaseLayer => {
+  const layers = map.getLayerGroup().getLayersArray();
+  for (let i = layers.length - 1; i > 0; i--) {
+    if (layers[i].getVisible()) {
+      return layers[i]
+    };
+  };
+  return null;
+};
+
+export const getLayerByName = (name: string): null | BaseLayer => {
+  const layers = map.getLayerGroup().getLayersArray();
+  for (let i = layers.length; i > 0; i--) {
+    if (layers[i].get('name') === name) {
+      return layers[i];
+    };
+  };
+  return null;
+}
+
 //gibt die Source des Indikators zurück der aktuell angezeigt wird, ignoriert Basis- und Overlaylayer
 //Gibt null zurück wenn keiner visible ist
 export const getCurrentLayerSource = (): ImageWMS | null => {
   const layers = map.getLayerGroup().getLayersArray();
   for (let i = layers.length - 2; i > 0; i--) {
-    if (layers[i].getVisible()) {
+    if (layers[i] && layers[i].getVisible()) {
+      
       return layers[i].getSource();
+
     };
   };
   return null;
 }
+
+export const getSourceByName = (name: string): ImageWMS | null => {
+  const layers = map.getLayerGroup().getLayersArray();
+  for (let i = layers.length -1; i > 0; i--) {
+    if (layers[i] && layers[i].get('name') === name) {
+      return layers[i].getSource();
+    };
+  };
+  return null;
+};
 
 //gibt die Resoultion des Indikators zurück der aktuell angezeigt wird, ignoriert Basis- und Overlaylayer
 //Gibt 0 zurück wenn keiner visible ist
@@ -294,4 +327,33 @@ export const moveToGeolocation = () => {
   }
 }
 
+export const readValueByName = (name: string, coords: number[]): number | string => {
+
+  const source = getSourceByName(name);
+
+  if (source) {
+    const url = source.getFeatureInfoUrl(
+      coords,
+      getCurrentRes(),
+      'EPSG:3857',
+      { 'INFO_FORMAT': 'application/json' });
+
+    if (url) {
+      fetch(url)
+        .then((response) => {
+          return response.text()
+        })
+        .then((info) => {
+          const obj = JSON.parse(info);
+          const features = obj.hasOwnProperty("features") ? obj.features[0] : null;
+          const properties = features !== null && features.hasOwnProperty("properties") ? features.properties : null;
+          if (properties !== null && properties.hasOwnProperty("GRAY_INDEX")) {
+            return properties.GRAY_INDEX;
+          };
+        });
+    }
+
+  } 
+  return 'No Value';
+}
 export default map;
